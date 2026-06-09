@@ -26,9 +26,15 @@ export const MoonIcon = ({ isDark }) => (
   </svg>
 );
 
-export const SpeakerIcon = ({ isDark }) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill={isDark ? "#fff" : "#333"}>
-    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+export const SpeakerIcon = ({ isDark, isMuted }) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill={isDark ? "#fff" : "#333"} stroke={isDark ? "#fff" : "#333"} strokeWidth="1.5">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" stroke="none" />
+    {isMuted && (
+      <>
+        <line x1="22" y1="2" x2="2" y2="22" strokeWidth="2" stroke="currentColor" />
+        <line x1="22" y1="2" x2="2" y2="22" strokeWidth="4" stroke={isDark ? "#1f1f1f" : "#fff"} style={{ mixBlendMode: 'destination-out' }} />
+      </>
+    )}
   </svg>
 );
 

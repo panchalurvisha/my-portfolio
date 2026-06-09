@@ -1,9 +1,11 @@
 "use client";
 import React from 'react';
+import DesktopWindow from './DesktopWindow';
+import { useSound } from './useSound';
 
-function ProjectCard({ title, desc1, desc2, tech, isDark, link = "#" }) {
+function ProjectCard({ title, desc1, desc2, tech, isDark, link = "#", onHover }) {
   return (
-    <a href={link} className={`block rounded-[8px] border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden flex flex-col ${isDark ? 'bg-[#1e293b]/50 border-gray-700 hover:border-gray-500' : 'bg-white border-gray-200 shadow-sm hover:border-gray-400'}`}>
+    <a href={link} onMouseEnter={onHover} className={`block rounded-[8px] border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden flex flex-col ${isDark ? 'bg-[#1e293b]/50 border-gray-700 hover:border-gray-500' : 'bg-white border-gray-200 shadow-sm hover:border-gray-400'}`}>
       <div className={`w-full aspect-[16/9] relative border-b ${isDark ? 'bg-[#16212e] border-gray-700' : 'bg-[#e2e8f0] border-gray-200'}`}>
         <img src="https://placehold.co/600x338/cbd5e1/64748b?text=Project+Image" alt={title} className="w-full h-full object-cover" />
       </div>
@@ -31,12 +33,10 @@ function SkillChip({ label, isDark }) {
 }
 
 export default function WorkCard({ isDark, onClose }) {
+  const { playSound } = useSound();
+  
   return (
-    <div className={`absolute top-4 md:top-[32px] left-1/2 -translate-x-1/2 w-[calc(100%-32px)] md:w-[980px] h-[calc(100%-64px)] md:h-[520px] max-h-[800px] rounded-lg shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col z-30 transition-colors duration-300 overflow-hidden ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
-      <div className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#1c1c1c]' : 'bg-[#4a4a4a]'}`}>
-        <span className="text-white text-[15px] font-mono tracking-wide">work</span>
-        <button onClick={onClose} className="text-white font-mono text-[15px] hover:opacity-70 transition-opacity">[x]</button>
-      </div>
+    <DesktopWindow title="work" isDark={isDark} onClose={onClose} width={980} height={520}>
       <div className="flex-1 overflow-y-auto px-5 md:px-8 py-6 md:py-8 relative custom-scroll">
         
         {/* Banner */}
@@ -90,6 +90,7 @@ export default function WorkCard({ isDark, onClose }) {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <ProjectCard 
+              onHover={() => playSound('hover_icon')}
               title="Singhai Ji Store ERP & POS System"
               desc1="A complete ERP and POS platform used for inventory management, billing, stock transfer, payroll, GST, analytics, and reporting."
               desc2="I worked on multiple modules, dashboard interfaces, invoice systems, responsive layouts, and production bug fixes."
@@ -98,6 +99,7 @@ export default function WorkCard({ isDark, onClose }) {
             />
 
             <ProjectCard 
+              onHover={() => playSound('hover_icon')}
               title="GVoice CRM"
               desc1="A CRM platform designed for company and user management."
               desc2="I developed the Super Admin Panel, login flow, company management screens, user management modules, and dashboard interfaces."
@@ -106,6 +108,7 @@ export default function WorkCard({ isDark, onClose }) {
             />
 
             <ProjectCard 
+              onHover={() => playSound('hover_icon')}
               title="GVoice HRMS"
               desc1="An HRMS application focused on employee management and HR workflows."
               desc2="I contributed to attendance management, employee modules, leave management screens, payroll-related interfaces, API integration, and responsive UI development."
@@ -114,6 +117,7 @@ export default function WorkCard({ isDark, onClose }) {
             />
 
             <ProjectCard 
+              onHover={() => playSound('hover_icon')}
               title="Catalyst"
               desc1="A financial and investment management platform."
               desc2="I contributed to dashboard development, data visualization, API integration, and user-facing modules while improving UI consistency and user experience."
@@ -122,6 +126,7 @@ export default function WorkCard({ isDark, onClose }) {
             />
 
             <ProjectCard 
+              onHover={() => playSound('hover_icon')}
               title="NatureEnergy Website"
               desc1="A production-ready corporate website focused on performance and user experience."
               desc2="I worked on responsive layouts, SEO optimization, reusable components, and modern frontend architecture."
@@ -130,6 +135,7 @@ export default function WorkCard({ isDark, onClose }) {
             />
 
             <ProjectCard 
+              onHover={() => playSound('hover_icon')}
               title="Novotion ERP"
               desc1="An enterprise application where I contributed to frontend development, reusable components, workflow improvements, and UI consistency."
               desc2=""
@@ -155,6 +161,6 @@ export default function WorkCard({ isDark, onClose }) {
         </div>
 
       </div>
-    </div>
+    </DesktopWindow>
   );
 }

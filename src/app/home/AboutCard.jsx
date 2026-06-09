@@ -1,16 +1,16 @@
 "use client";
 import React from 'react';
+import DesktopWindow from './DesktopWindow';
+import { useSound } from './useSound';
 
 export default function AboutCard({ isDark, onClose }) {
+  const { playSound } = useSound();
+  
   return (
-    <div className={`absolute top-4 md:top-[32px] left-4 md:left-[16px] w-[calc(100%-32px)] md:w-[728px] h-[calc(100%-64px)] md:h-[440px] max-h-[800px] rounded-lg shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col z-30 transition-colors duration-300 overflow-hidden ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
-      <div className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#1c1c1c]' : 'bg-[#4a4a4a]'}`}>
-        <span className="text-white text-[15px] font-mono tracking-wide">about</span>
-        <button onClick={onClose} className="text-white font-mono text-[15px] hover:opacity-70 transition-opacity">[x]</button>
-      </div>
+    <DesktopWindow title="about" isDark={isDark} onClose={onClose} width={728} height={440}>
       <div className="px-5 md:px-8 pt-6 md:pt-8 pb-4 md:pb-6 flex-shrink-0 relative z-10 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left">
-          <div className="w-[90px] h-[90px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden flex-shrink-0 border-2 border-transparent relative shadow-sm">
+          <div onMouseEnter={() => playSound('hover_icon')} className="cursor-pointer hover:scale-105 transition-transform w-[90px] h-[90px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden flex-shrink-0 border-2 border-transparent relative shadow-sm">
             <img src="/about/avatar.webp" alt="avatar" className="w-full h-full object-cover" />
           </div>
           <div className="pt-1">
@@ -28,6 +28,7 @@ export default function AboutCard({ isDark, onClose }) {
           </div>
         </div>
       </div>
+
       <div className="flex-1 overflow-y-auto px-5 md:px-8 pb-8 pt-4 md:pt-2 relative custom-scroll">
         <div className={`text-[15px] leading-relaxed transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#737373]'}`}>
           <p className="mb-4">hi! i'm urvisha, a full stack developer. i...</p>
@@ -88,6 +89,6 @@ export default function AboutCard({ isDark, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </DesktopWindow>
   );
 }

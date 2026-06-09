@@ -15,6 +15,8 @@ import {
   InstagramIcon,
 } from './Icons';
 
+import { SoundProvider, useSound } from './useSound';
+
 import AboutCard from './AboutCard';
 import LinksCard from './LinksCard';
 import WorkCard from './WorkCard';
@@ -22,8 +24,17 @@ import FaqCard from './FaqCard';
 import ContactCard from './ContactCard';
 
 export default function Hero() {
+  return (
+    <SoundProvider>
+      <HeroContent />
+    </SoundProvider>
+  );
+}
+
+function HeroContent() {
   const [isDark, setIsDark] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
+  const { isMuted, toggleMute, playSound } = useSound();
   const [openFaq, setOpenFaq] = useState(1);
 
   const toggleTheme = () => {
@@ -38,11 +49,11 @@ export default function Hero() {
     <div className={`min-h-screen w-full relative overflow-hidden transition-colors duration-300 font-sans flex flex-col ${isDark ? 'bg-[#1f1f1f] selection:bg-[#2c6086]' : 'bg-white selection:bg-[#a5d5f8]'} selection:text-white`}>
       {/* Top Left Icons */}
       <div className="absolute top-6 left-6 flex items-center gap-5 z-20">
-        <button onClick={toggleTheme} className="hover:opacity-70 transition-opacity [&>svg]:w-[24px] [&>svg]:h-[24px]">
+        <button onMouseEnter={() => playSound('hover_icon')} onClick={() => { playSound('theme_toggle'); toggleTheme(); }} className="hover:opacity-70 transition-opacity [&>svg]:w-[24px] [&>svg]:h-[24px]">
           {isDark ? <MoonIcon isDark={isDark} /> : <SunIcon isDark={isDark} />}
         </button>
-        <button className="hover:opacity-70 transition-opacity [&>svg]:w-[24px] [&>svg]:h-[24px]">
-          <SpeakerIcon isDark={isDark} />
+        <button onMouseEnter={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); toggleMute(); }} className="hover:opacity-70 transition-opacity [&>svg]:w-[24px] [&>svg]:h-[24px]" title={isMuted ? "Unmute sounds" : "Mute sounds"}>
+          <SpeakerIcon isDark={isDark} isMuted={isMuted} />
         </button>
       </div>
 
@@ -70,7 +81,10 @@ export default function Hero() {
       </div>
 
       {/* Frog Character */}
-      <div className="absolute bottom-20 md:bottom-6 right-2 md:right-10 z-10">
+      <div 
+        className="absolute bottom-20 md:bottom-6 right-2 md:right-10 z-10 cursor-pointer hover:scale-105 transition-transform"
+        onMouseEnter={() => playSound('hover_frog')}
+      >
         <img src="/hero/froggert_stop.webp" alt="frog" className="w-[80px] h-[60px] md:w-[120px] md:h-[90px] object-contain" />
       </div>
 
@@ -82,7 +96,10 @@ export default function Hero() {
           {/* Main Home Window */}
           <div className="relative w-full">
             {/* Star Character */}
-            <div className="absolute -top-[55px] md:-top-[75px] left-[10px] md:left-[16px] -rotate-[15deg] transition-colors duration-300 z-0">
+            <div 
+              className="absolute -top-[55px] md:-top-[75px] left-[10px] md:left-[16px] -rotate-[15deg] transition-all duration-300 z-0 cursor-pointer hover:scale-110"
+              onMouseEnter={() => playSound('hover_star')}
+            >
               <img src="/hero/icon_star.webp" alt="star" className="w-[65px] h-[65px] md:w-[85px] md:h-[85px] object-contain" />
             </div>
 
@@ -107,11 +124,11 @@ export default function Hero() {
 
                 {/* Icons Row */}
                 <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-10 mt-2 max-w-[400px] md:max-w-none">
-                  <IconItem icon={<AboutIcon isDark={isDark} />} label="about" isDark={isDark} onClick={() => setActiveCard('about')} />
-                  <IconItem icon={<LinksIcon isDark={isDark} />} label="links" isDark={isDark} onClick={() => setActiveCard('links')} />
-                  <IconItem icon={<WorkIcon isDark={isDark} />} label="work" isDark={isDark} onClick={() => setActiveCard('work')} />
-                  <IconItem icon={<FaqIcon isDark={isDark} />} label="faq" isDark={isDark} onClick={() => setActiveCard('faq')} />
-                  <IconItem icon={<ContactIcon isDark={isDark} />} label="contact" isDark={isDark} onClick={() => setActiveCard('contact')} />
+                  <IconItem icon={<AboutIcon isDark={isDark} />} label="about" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_about'), 100); setActiveCard('about'); }} />
+                  <IconItem icon={<LinksIcon isDark={isDark} />} label="links" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_links'), 100); setActiveCard('links'); }} />
+                  <IconItem icon={<WorkIcon isDark={isDark} />} label="work" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_work'), 100); setActiveCard('work'); }} />
+                  <IconItem icon={<FaqIcon isDark={isDark} />} label="faq" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_faq'), 100); setActiveCard('faq'); }} />
+                  <IconItem icon={<ContactIcon isDark={isDark} />} label="contact" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_contact'), 100); setActiveCard('contact'); }} />
                 </div>
               </div>
             </div>
@@ -131,9 +148,9 @@ export default function Hero() {
       {/* Social Footer */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
         <div className="flex items-center gap-3">
-          <SocialButton icon={<TwitterIcon isDark={isDark} />} isDark={isDark} />
-          <SocialButton icon={<YouTubeIcon isDark={isDark} />} isDark={isDark} />
-          <SocialButton icon={<InstagramIcon isDark={isDark} />} isDark={isDark} />
+          <SocialButton icon={<TwitterIcon isDark={isDark} />} isDark={isDark} onHover={() => playSound('hover_footer')} />
+          <SocialButton icon={<YouTubeIcon isDark={isDark} />} isDark={isDark} onHover={() => playSound('hover_footer')} />
+          <SocialButton icon={<InstagramIcon isDark={isDark} />} isDark={isDark} onHover={() => playSound('hover_footer')} />
         </div>
         <span className={`text-xs mt-1 transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#6b6b6b]'}`}>© 2025 Urvisha Panchal</span>
       </div>
@@ -155,9 +172,9 @@ export default function Hero() {
   );
 }
 
-function IconItem({ icon, label, isDark, onClick }) {
+function IconItem({ icon, label, isDark, onClick, onHover }) {
   return (
-    <div className="flex flex-col items-center gap-2 cursor-pointer group" onClick={onClick}>
+    <div className="flex flex-col items-center gap-2 cursor-pointer group" onClick={onClick} onMouseEnter={onHover}>
       <div className="transition-transform group-hover:-translate-y-1 [&>svg]:w-[55px] [&>svg]:h-[55px]">
         {icon}
       </div>
@@ -168,9 +185,9 @@ function IconItem({ icon, label, isDark, onClick }) {
   );
 }
 
-function SocialButton({ icon, isDark }) {
+function SocialButton({ icon, isDark, onHover }) {
   return (
-    <a href="#" className={`w-9 h-9 rounded-full flex items-center justify-center hover:opacity-80 transition-colors duration-300 ${isDark ? 'bg-white' : 'bg-[#4a4a4a]'} [&>svg]:w-[18px] [&>svg]:h-[18px]`}>
+    <a href="#" onMouseEnter={onHover} className={`w-9 h-9 rounded-full flex items-center justify-center hover:opacity-80 transition-colors duration-300 ${isDark ? 'bg-white' : 'bg-[#4a4a4a]'} [&>svg]:w-[18px] [&>svg]:h-[18px]`}>
       {icon}
     </a>
   );
