@@ -70,8 +70,8 @@ export default function Hero() {
       </div>
 
       {/* Frog Character */}
-      <div className="absolute bottom-6 right-10 z-10">
-        <img src="/hero/froggert_stop.webp" alt="frog" className="w-[120px] h-[90px] object-contain" />
+      <div className="absolute bottom-20 md:bottom-6 right-2 md:right-10 z-10">
+        <img src="/hero/froggert_stop.webp" alt="frog" className="w-[80px] h-[60px] md:w-[120px] md:h-[90px] object-contain" />
       </div>
 
       {/* Main Content Area */}
@@ -82,12 +82,12 @@ export default function Hero() {
           {/* Main Home Window */}
           <div className="relative w-full">
             {/* Star Character */}
-            <div className="absolute -top-[75px] left-[16px] -rotate-[15deg] transition-colors duration-300 z-0">
-              <img src="/hero/icon_star.webp" alt="star" className="w-[85px] h-[85px] object-contain" />
+            <div className="absolute -top-[55px] md:-top-[75px] left-[10px] md:left-[16px] -rotate-[15deg] transition-colors duration-300 z-0">
+              <img src="/hero/icon_star.webp" alt="star" className="w-[65px] h-[65px] md:w-[85px] md:h-[85px] object-contain" />
             </div>
 
             {/* Home Window Card */}
-            <div className={`relative z-10 rounded-lg overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.12)] flex flex-col w-full h-[440px] transition-colors duration-300 ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
+            <div className={`relative z-10 rounded-lg overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.12)] flex flex-col w-full min-h-[360px] md:h-[440px] h-auto transition-colors duration-300 ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
               {/* Top Bar */}
               <div className={`h-[38px] w-full flex items-center px-4 transition-colors duration-300 ${isDark ? 'bg-[#1c1c1c]' : 'bg-[#4a4a4a]'}`}>
                 <span className="text-white text-[15px] font-medium tracking-wide">home</span>
@@ -96,17 +96,17 @@ export default function Hero() {
               {/* Window Body */}
               <div className="flex-1 flex flex-col items-center justify-center relative p-6">
 
-                <h1 className="text-[60px] leading-tight mb-2 flex items-center gap-2">
+                <h1 className="text-[40px] sm:text-[50px] md:text-[60px] leading-tight mb-2 flex flex-col sm:flex-row items-center justify-center gap-0 sm:gap-2 text-center">
                   <span className={`font-normal tracking-tight transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#595959]'}`}>hi!</span>
                   <span className={`font-medium tracking-tight transition-colors duration-300 ${isDark ? 'text-[#a2e1e9]' : 'text-[#ff9800]'}`}>i'm urvisha</span>
                 </h1>
 
-                <p className={`text-[20px] mb-12 transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#737373]'}`}>
+                <p className={`text-[16px] sm:text-[18px] md:text-[20px] text-center mb-8 md:mb-12 transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#737373]'}`}>
                   full stack developer
                 </p>
 
                 {/* Icons Row */}
-                <div className="flex items-center justify-center gap-10 mt-2">
+                <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-10 mt-2 max-w-[400px] md:max-w-none">
                   <IconItem icon={<AboutIcon isDark={isDark} />} label="about" isDark={isDark} onClick={() => setActiveCard('about')} />
                   <IconItem icon={<LinksIcon isDark={isDark} />} label="links" isDark={isDark} onClick={() => setActiveCard('links')} />
                   <IconItem icon={<WorkIcon isDark={isDark} />} label="work" isDark={isDark} onClick={() => setActiveCard('work')} />

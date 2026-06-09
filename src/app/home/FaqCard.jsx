@@ -24,7 +24,7 @@ function AccordionItem({ title, content, isOpen, onClick, isDark }) {
 
 export default function FaqCard({ isDark, onClose, openFaq, toggleFaq }) {
   return (
-    <div className={`absolute top-[32px] left-[16px] w-[728px] h-[440px] rounded-lg shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col z-30 transition-colors duration-300 overflow-hidden ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
+    <div className={`absolute top-4 md:top-[32px] left-4 md:left-[16px] w-[calc(100%-32px)] md:w-[728px] h-[calc(100%-64px)] md:h-[440px] max-h-[800px] rounded-lg shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col z-30 transition-colors duration-300 overflow-hidden ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
       <div className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#1c1c1c]' : 'bg-[#4a4a4a]'}`}>
         <span className="text-white text-[15px] font-mono tracking-wide">frequently asked questions</span>
         <button onClick={onClose} className="text-white font-mono text-[15px] hover:opacity-70 transition-opacity">[x]</button>

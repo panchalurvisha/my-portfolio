@@ -32,12 +32,12 @@ function SkillChip({ label, isDark }) {
 
 export default function WorkCard({ isDark, onClose }) {
   return (
-    <div className={`absolute top-[32px] left-1/2 -translate-x-1/2 w-[980px] h-[520px] rounded-lg shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col z-30 transition-colors duration-300 overflow-hidden ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
+    <div className={`absolute top-4 md:top-[32px] left-1/2 -translate-x-1/2 w-[calc(100%-32px)] md:w-[980px] h-[calc(100%-64px)] md:h-[520px] max-h-[800px] rounded-lg shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col z-30 transition-colors duration-300 overflow-hidden ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
       <div className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#1c1c1c]' : 'bg-[#4a4a4a]'}`}>
         <span className="text-white text-[15px] font-mono tracking-wide">work</span>
         <button onClick={onClose} className="text-white font-mono text-[15px] hover:opacity-70 transition-opacity">[x]</button>
       </div>
-      <div className="flex-1 overflow-y-auto px-8 py-8 relative custom-scroll">
+      <div className="flex-1 overflow-y-auto px-5 md:px-8 py-6 md:py-8 relative custom-scroll">
         
         {/* Banner */}
         <div className={`w-full rounded-[8px] p-5 mb-8 transition-colors duration-300 shadow-sm ${isDark ? 'bg-[#2a3022] text-gray-200' : 'bg-[#fffdf0] text-[#555]'}`}>
