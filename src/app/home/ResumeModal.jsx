@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, X, FileText } from 'lucide-react';
+import { X, FileText } from 'lucide-react';
 import { useSound } from './useSound';
 
 export default function ResumeModal({ isDark, onClose }) {
@@ -41,19 +41,6 @@ export default function ResumeModal({ isDark, onClose }) {
               </h2>
             </div>
             <div className="flex items-center gap-3">
-              <a
-                href="/Urvisha_Panchal_Resume.pdf"
-                download="Urvisha_Panchal_Resume.pdf"
-                onClick={() => playSound('iconClick')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm ${
-                  isDark
-                    ? 'bg-[#a2e1e9] text-[#10202b] hover:bg-[#8fd9e1]'
-                    : 'bg-[#ff9800] text-white hover:bg-[#e68a00]'
-                }`}
-              >
-                <Download className="w-4 h-4" />
-                Download Resume
-              </a>
               <button
                 onClick={() => { playSound('close_window'); onClose(); }}
                 className={`p-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-gray-400 hover:text-white' : 'hover:bg-black/5 text-gray-500 hover:text-gray-900'
