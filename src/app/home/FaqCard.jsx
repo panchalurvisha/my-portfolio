@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import DesktopWindow from './DesktopWindow';
+import { personalInfo } from '../config';
 
 function AccordionItem({ title, content, isOpen, onClick, isDark }) {
   return (
@@ -75,7 +76,7 @@ export default function FaqCard({ isDark, onClose, openFaq, toggleFaq }) {
             onClick={() => toggleFaq(1)} 
             isDark={isDark}
             content={
-              <p>Yes! I am currently accepting freelance projects and exploring full-time opportunities. If you have an exciting project in mind, feel free to reach out via my <a href="mailto:panchalurvisha147@gmail.com" className={`underline font-bold transition-colors duration-300 ${isDark ? 'text-[#d6a2e9] hover:text-white' : 'text-[#9d4edd] hover:text-black'}`}>email</a> or LinkedIn.</p>
+              <p>Yes! I am currently accepting freelance projects and exploring full-time opportunities. If you have an exciting project in mind, feel free to reach out via my <a href={`mailto:${personalInfo.email}`} className={`underline font-bold transition-colors duration-300 ${isDark ? 'text-[#d6a2e9] hover:text-white' : 'text-[#9d4edd] hover:text-black'}`}>email</a> or LinkedIn.</p>
             }
           />
           <AccordionItem 

@@ -4,13 +4,16 @@ import { motion } from 'framer-motion';
 import DesktopWindow from './DesktopWindow';
 import { useSound } from './useSound';
 
+import { personalInfo } from '../config';
+import { LinkedInIcon } from './Icons';
+
 export default function ContactCard({ isDark, onClose }) {
   const { playSound } = useSound();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
     playSound('cta_click');
-    navigator.clipboard.writeText('panchalurvisha147@gmail.com');
+    navigator.clipboard.writeText(personalInfo.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -53,15 +56,13 @@ export default function ContactCard({ isDark, onClose }) {
 
               <div className="flex flex-col sm:flex-row flex-wrap lg:flex-nowrap items-center justify-center md:justify-start gap-4">
                 <a
-                  href="https://www.linkedin.com/in/urvisha-panchal-9423933b9/"
+                  href={personalInfo.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   onMouseEnter={() => playSound('hover_tick')}
                   className={`flex items-center justify-center gap-2 font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:-translate-y-1 shadow-lg bg-[#0A66C2] text-white hover:bg-[#004182] hover:shadow-[#0A66C2]/30`}
                 >
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
+                  <LinkedInIcon width="20" height="20" fill="currentColor" />
                   Connect
                 </a>
                 
@@ -78,7 +79,7 @@ export default function ContactCard({ isDark, onClose }) {
                   <div className="flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] w-0 opacity-0 group-hover:w-[310px] group-hover:opacity-100 overflow-hidden whitespace-nowrap">
                     <div className="flex items-center px-2">
                       <a
-                        href="mailto:panchalurvisha147@gmail.com"
+                        href={`mailto:${personalInfo.email}`}
                         onMouseEnter={() => playSound('hover_tick')}
                         className={`font-bold px-5 py-2.5 rounded-full transition-colors flex-shrink-0 ${
                           isDark ? 'hover:bg-black/10' : 'hover:bg-white/20'

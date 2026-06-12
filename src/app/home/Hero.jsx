@@ -11,16 +11,22 @@ import {
   UrvishaAvatar,
   BunnyPeek,
 } from './Icons';
+import dynamic from 'next/dynamic';
 import { SoundProvider, useSound } from './useSound';
-import AboutCard from './AboutCard';
-import LinksCard from './LinksCard';
-import WorkCard from './WorkCard';
-import FaqCard from './FaqCard';
-import ContactCard from './ContactCard';
 import ThemeSwitch from './ThemeSwitch';
 import SoundSwitch from './SoundSwitch';
 import ResumeModal from './ResumeModal';
 import Loader from './Loader';
+import { personalInfo } from '../config';
+import { LinkedInIcon } from './Icons';
+
+// Optimize initial load by dynamically importing the window cards
+// These heavy UI components will only be loaded when they are needed
+const AboutCard = dynamic(() => import('./AboutCard'));
+const LinksCard = dynamic(() => import('./LinksCard'));
+const WorkCard = dynamic(() => import('./WorkCard'));
+const FaqCard = dynamic(() => import('./FaqCard'));
+const ContactCard = dynamic(() => import('./ContactCard'));
 
 const navItems = [
   { id: 'about', label: 'about', icon: AboutIcon },
@@ -44,6 +50,7 @@ function HeroContent() {
   const [openFaq, setOpenFaq] = useState(1);
   const [windowState, setWindowState] = useState('open');
   const [showResume, setShowResume] = useState(false);
+  const [gifLoaded, setGifLoaded] = useState(false);
   const { isMuted, toggleMute, playSound } = useSound();
 
   const themeClasses = isDark
@@ -213,11 +220,26 @@ function HeroContent() {
               playSound('open_window');
               setWindowState('open');
             }}
-            className={`fixed left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2 rounded-[14px] border px-6 py-4 font-mono text-sm font-bold shadow-[0_16px_50px_rgba(28,56,76,0.22)] backdrop-blur-xl transition-transform hover:scale-[1.03] ${
-              isDark ? 'border-white/15 bg-[#172637]/90 text-[#a2e1e9]' : 'border-white/80 bg-white/88 text-[#ff9800]'
-            }`}
+            className="fixed left-1/2 top-1/2 z-40 flex flex-col items-center gap-4 -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-105"
           >
-            Open portfolio
+            <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-[6px] border-white shadow-[0_20px_60px_rgba(0,0,0,0.15)] bg-white flex items-center justify-center">
+              {!gifLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#f8fafc]">
+                  <div className="w-8 h-8 border-[3px] border-gray-200 border-t-[#0A66C2] rounded-full animate-spin"></div>
+                </div>
+              )}
+              <img 
+                src="/hello-character.gif" 
+                alt="Saying Hello" 
+                className={`w-full h-full object-cover transition-opacity duration-500 ${gifLoaded ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => setGifLoaded(true)}
+              />
+            </div>
+            <div className={`rounded-full border px-6 py-3 font-mono text-sm font-bold shadow-xl backdrop-blur-xl ${
+              isDark ? 'border-white/15 bg-[#172637]/90 text-[#a2e1e9]' : 'border-white/80 bg-white/88 text-[#ff9800]'
+            }`}>
+              Open me! 👋
+            </div>
           </motion.button>
         )}
       </AnimatePresence>
@@ -232,19 +254,17 @@ function HeroContent() {
         isDark ? 'border-[#0A66C2]/20 bg-[#172637]/90' : 'border-[#0A66C2]/20 bg-white/90'
       }`}>
         <a
-          href="https://www.linkedin.com/in/urvisha-panchal-9423933b9/"
+          href={personalInfo.linkedin}
           target="_blank"
           rel="noopener noreferrer"
           onMouseEnter={() => playSound('hover_footer')}
           className="group flex items-center gap-2.5 rounded-full px-6 py-3 text-[14px] font-bold tracking-wide transition-all duration-300 shadow-sm hover:shadow-md bg-[#0A66C2] text-white hover:bg-[#004182] hover:shadow-[#0A66C2]/30"
         >
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-          </svg>
+          <LinkedInIcon width="20" height="20" fill="currentColor" />
           Connect
         </a>
         <span className={`hidden px-4 font-mono text-[13px] font-bold tracking-wider sm:block ${isDark ? 'text-white/60' : 'text-[#718096]'}`}>
-          © 2026 Urvisha Panchal | Ahmedabad,Gujarat 
+          © 2026 {personalInfo.name} | {personalInfo.location} 
         </span>
       </footer>
 

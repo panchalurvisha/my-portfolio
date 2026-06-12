@@ -6,10 +6,10 @@ export default function Loader({ isDark }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading time so the user can see the greeting animation
+    // Reduced artificial loading time to be fast while still showing the greeting briefly
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2500);
+    }, 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -38,7 +38,7 @@ export default function Loader({ isDark }) {
               Once you add the real GIF to the public folder, change this src to "/your-gif-name.gif"
             */}
             <img 
-              src="/hello-character.jpg" 
+              src="/hello-character.gif" 
               alt="Urvisha saying hello" 
               className="w-full h-full object-cover"
             />

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, FileText } from 'lucide-react';
 import { useSound } from './useSound';
+import { personalInfo } from '../config';
 
 export default function ResumeModal({ isDark, onClose }) {
   const { playSound } = useSound();
@@ -52,15 +53,13 @@ export default function ResumeModal({ isDark, onClose }) {
           </div>
 
           {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-8 custom-scroll bg-black/5">
+          <div className="flex-1 overflow-hidden bg-[#525659]">
             {/* PDF Viewer */}
-            <div className="w-full h-full min-h-[70vh] bg-white rounded-xl shadow-lg overflow-hidden">
-              <iframe
-                src="/Urvisha_Panchal_Full_Stack_Resume.pdf#toolbar=0&navpanes=0&scrollbar=0"
-                className="w-full h-full min-h-[70vh] border-0"
-                title="Resume PDF"
-              />
-            </div>
+            <iframe
+              src={`${personalInfo.resume}#view=FitH&toolbar=0&navpanes=0`}
+              className="w-full h-full min-h-[75vh] border-0 outline-none"
+              title="Resume PDF"
+            />
           </div>
         </motion.div>
       </motion.div>
