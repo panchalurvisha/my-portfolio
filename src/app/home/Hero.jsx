@@ -20,6 +20,7 @@ import ContactCard from './ContactCard';
 import ThemeSwitch from './ThemeSwitch';
 import SoundSwitch from './SoundSwitch';
 import ResumeModal from './ResumeModal';
+import Loader from './Loader';
 
 const navItems = [
   { id: 'about', label: 'about', icon: AboutIcon },
@@ -71,7 +72,9 @@ function HeroContent() {
   };
 
   return (
-    <div className={`min-h-[100svh] w-full relative overflow-hidden transition-colors duration-500 font-sans ${themeClasses} selection:text-white`}>
+    <>
+      <Loader isDark={isDark} />
+      <div className={`min-h-[100svh] w-full relative overflow-hidden transition-colors duration-500 font-sans ${themeClasses} selection:text-white`}>
       <AnimatedBackground isDark={isDark} />
 
       <div className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-4 z-30">
@@ -265,6 +268,7 @@ function HeroContent() {
         }
       `}} />
     </div>
+    </>
   );
 }
 
