@@ -2,6 +2,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSound } from './useSound';
+import { AboutIcon, LinksIcon, WorkIcon, FaqIcon, ContactIcon } from './Icons';
+
+const getWindowIcon = (title, isDark) => {
+  switch (title?.toLowerCase()) {
+    case 'about': return <AboutIcon isDark={isDark} />;
+    case 'links': return <LinksIcon isDark={isDark} />;
+    case 'work': return <WorkIcon isDark={isDark} />;
+    case 'faq': return <FaqIcon isDark={isDark} />;
+    case 'contact': return <ContactIcon isDark={isDark} />;
+    default: return <span className={`w-2.5 h-2.5 rounded-full ${isDark ? 'bg-[#a2e1e9]' : 'bg-[#ff9800]'}`}></span>;
+  }
+};
 
 function getViewportSize() {
   if (typeof window === 'undefined') return { width: 0, height: 0 };
@@ -195,24 +207,33 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* Taskbar / Minimized State */}
       <AnimatePresence>
         {isMinimized && (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            whileHover={{ scale: 1.05, y: -4 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               playSound('restore');
               setIsMinimized(false);
               setZIndex(100);
             }}
-            className={`fixed bottom-4 left-4 z-[110] px-4 py-2 rounded-md shadow-[0_4px_15px_rgba(0,0,0,0.15)] cursor-pointer flex items-center gap-3 border transition-colors ${isDark ? 'bg-[#1c1c1c] border-gray-700 hover:bg-[#252525]' : 'bg-white border-gray-200 hover:bg-gray-50'}`}
+            className={`fixed bottom-8 left-6 z-[110] px-4 py-3 rounded-2xl shadow-xl cursor-pointer flex items-center gap-4 border transition-colors group ${
+              isDark ? 'bg-[#172637]/95 border-white/10 hover:border-[#a2e1e9]/30 hover:bg-[#1a2d42]' : 'bg-white/95 border-[#eef2f6] hover:border-[#a8d3fc] hover:bg-[#f8fbff]'
+            } backdrop-blur-xl`}
           >
-            <div className="flex items-center gap-2">
-              <span className={`w-2.5 h-2.5 rounded-full ${isDark ? 'bg-[#a2e1e9]' : 'bg-[#ff9800]'}`}></span>
-              <span className={`font-mono text-[14px] font-medium tracking-wide ${isDark ? 'text-white' : 'text-[#4a4a4a]'}`}>{title}</span>
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 flex items-center justify-center transition-transform group-hover:scale-110">
+                {getWindowIcon(title, isDark)}
+              </div>
+              <span className={`font-mono text-[14px] font-bold tracking-wide capitalize transition-colors ${
+                isDark ? 'text-white group-hover:text-[#a2e1e9]' : 'text-[#4a5568] group-hover:text-[#2d3748]'
+              }`}>
+                {title}
+              </span>
             </div>
             
             <button 
@@ -220,10 +241,12 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
                 e.stopPropagation(); 
                 closeWindow();
               }}
-              className="ml-2 hover:opacity-70 transition-opacity"
+              className={`ml-2 p-1.5 rounded-full opacity-50 hover:opacity-100 transition-all ${
+                isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-black/5 text-black'
+              }`}
               title="Close"
             >
-              <svg width="10" height="10" viewBox="0 0 12 12" fill={isDark ? "white" : "black"}>
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor">
                 <path d="M11.854 1.854a.5.5 0 00-.708-.708L6 6.293 1.854 1.146a.5.5 0 10-.708.708L5.293 7l-4.147 4.146a.5.5 0 00.708.708L6 7.707l4.146 4.147a.5.5 0 00.708-.708L6.707 7l4.147-4.146z" stroke="currentColor" strokeWidth="0.5"/>
               </svg>
             </button>

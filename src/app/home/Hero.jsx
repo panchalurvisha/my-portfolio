@@ -161,11 +161,11 @@ function HeroContent() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.14, duration: 0.45 }}
-                    className="relative mx-auto flex w-full max-w-[285px] items-center justify-center sm:max-w-[315px] md:max-w-[350px]"
+                    className="relative mx-auto flex w-56 h-56 sm:w-72 sm:h-72 items-center justify-center rounded-full overflow-hidden border-[6px] shadow-[0_18px_40px_rgba(35,70,95,0.15)] transition-transform hover:scale-[1.03] duration-300"
+                    style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'white' }}
                     onMouseEnter={() => playSound('hover_face')}
                   >
-                    <div className={`absolute inset-x-7 bottom-4 h-24 rounded-full blur-2xl ${isDark ? 'bg-[#4fc3d7]/20' : 'bg-[#a8d3fc]/55'}`} />
-                    <UrvishaAvatar isDark={isDark} pose="typing" />
+                    <img src="/hero.jpg" alt="Urvisha Hero" className="w-full h-full object-cover" />
                   </motion.div>
                 </div>
               </motion.section>
@@ -225,19 +225,24 @@ function HeroContent() {
       {activeCard === 'faq' && <FaqCard isDark={isDark} onClose={() => setActiveCard(null)} openFaq={openFaq} toggleFaq={(index) => setOpenFaq(openFaq === index ? null : index)} />}
       {activeCard === 'contact' && <ContactCard isDark={isDark} onClose={() => setActiveCard(null)} />}
 
-      <footer className={`absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-[18px] border px-3 py-2 shadow-[0_12px_38px_rgba(43,86,118,0.16)] backdrop-blur-xl ${
-        isDark ? 'border-white/12 bg-[#172637]/58' : 'border-white/70 bg-white/62'
+      <footer className={`absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4 rounded-full border p-2 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 ${
+        isDark ? 'border-[#0A66C2]/20 bg-[#172637]/90' : 'border-[#0A66C2]/20 bg-white/90'
       }`}>
-        <button
-          onClick={() => openCard('contact')}
+        <a
+          href="https://www.linkedin.com/in/urvisha-panchal-9423933b9/"
+          target="_blank"
+          rel="noopener noreferrer"
           onMouseEnter={() => playSound('hover_footer')}
-          className={`dock-item rounded-[14px] px-4 py-2 text-[13px] font-bold tracking-wide shadow-[0_10px_28px_rgba(43,86,118,0.18)] transition-all hover:-translate-y-1 hover:scale-[1.04] ${
-            isDark ? 'bg-[#a2e1e9] text-[#10202b] hover:shadow-[0_14px_34px_rgba(162,225,233,0.24)]' : 'bg-[#35424a] text-white hover:shadow-[0_14px_34px_rgba(53,66,74,0.2)]'
-          }`}
+          className="group flex items-center gap-2.5 rounded-full px-6 py-3 text-[14px] font-bold tracking-wide transition-all duration-300 shadow-sm hover:shadow-md bg-[#0A66C2] text-white hover:bg-[#004182] hover:shadow-[#0A66C2]/30"
         >
-          Let&apos;s Talk
-        </button>
-        <span className={`hidden rounded-[12px] px-3 py-2 text-xs sm:block ${isDark ? 'text-white/64' : 'text-[#687b87]'}`}>2026 Urvisha Panchal</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          Connect
+        </a>
+        <span className={`hidden px-4 font-mono text-[13px] font-bold tracking-wider sm:block ${isDark ? 'text-white/60' : 'text-[#718096]'}`}>
+          © 2026 Urvisha Panchal | Ahmedabad,Gujarat 
+        </span>
       </footer>
 
       <div

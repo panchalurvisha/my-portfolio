@@ -2,15 +2,16 @@
 import React from 'react';
 import DesktopWindow from './DesktopWindow';
 import { useSound } from './useSound';
-import { TwitterSticker, YouTubeSticker, KofiSticker, DiscordSticker, InstagramSticker, BlueskySticker, InPrntSticker, MerchSticker } from './Icons';
 
-function StickerItem({ icon, label, isDark, onHover }) {
+function LinkItem({ icon, label, isDark, onHover, href }) {
   return (
-    <a href="#" onMouseEnter={onHover} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 group hover:-translate-y-1 transition-transform">
-      <div className={`[&>svg]:w-[65px] [&>svg]:h-[65px] drop-shadow-[2px_3px_0px_${isDark ? '#333' : '#dbdbdb'}]`}>
+    <a href={href} onMouseEnter={onHover} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-4 group hover:-translate-y-2 transition-transform">
+      <div className={`w-[84px] h-[84px] rounded-2xl flex items-center justify-center border shadow-sm transition-all duration-300 ${
+        isDark ? 'bg-[#172637] border-white/10 group-hover:border-[#a2e1e9]/40 group-hover:shadow-[0_0_20px_rgba(162,225,233,0.15)]' : 'bg-white border-[#eef2f6] group-hover:border-[#a8d3fc] group-hover:shadow-[0_8px_20px_rgba(168,211,252,0.3)]'
+      }`}>
         {icon}
       </div>
-      <span className={`font-mono text-[13px] font-bold lowercase tracking-wide transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#4d4d4d]'}`}>
+      <span className={`font-mono text-[14px] font-bold tracking-wide transition-colors duration-300 ${isDark ? 'text-gray-300 group-hover:text-white' : 'text-[#4a5568] group-hover:text-[#2d3748]'}`}>
         {label}
       </span>
     </a>
@@ -21,20 +22,54 @@ export default function LinksCard({ isDark, onClose }) {
   const { playSound } = useSound();
   
   return (
-    <DesktopWindow title="links" isDark={isDark} onClose={onClose} width={620} height={440}>
-      <div className="flex-1 flex flex-col p-5 md:p-8 items-center justify-between overflow-y-auto custom-scroll">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-8 md:gap-y-10 w-full mt-4">
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<TwitterSticker isDark={isDark} />} label="twitter" isDark={isDark} />
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<YouTubeSticker isDark={isDark} />} label="youtube" isDark={isDark} />
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<KofiSticker isDark={isDark} />} label="ko-fi" isDark={isDark} />
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<DiscordSticker isDark={isDark} />} label="discord" isDark={isDark} />
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<InstagramSticker isDark={isDark} />} label="instagram" isDark={isDark} />
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<BlueskySticker isDark={isDark} />} label="bluesky" isDark={isDark} />
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<InPrntSticker isDark={isDark} />} label="art prints" isDark={isDark} />
-          <StickerItem onHover={() => playSound('hover_icon')} icon={<MerchSticker isDark={isDark} />} label="merch" isDark={isDark} />
-        </div>
-        <div className={`border rounded-[6px] py-3 px-8 text-[13px] tracking-wide mb-2 transition-colors duration-300 ${isDark ? 'border-gray-600 text-gray-300' : 'border-gray-200 text-[#7a7a7a]'}`}>
-          clicking any of the links will open a new tab!
+    <DesktopWindow title="links" isDark={isDark} onClose={onClose} width={640} height={380}>
+      <div className={`flex-1 flex flex-col p-5 md:p-8 items-center justify-center overflow-y-auto custom-scroll transition-colors duration-300 ${isDark ? 'bg-[#111d28]/95' : 'bg-[#f7fbff]/95'}`}>
+        
+        <div className="flex flex-wrap gap-6 sm:gap-10 w-full justify-center mt-2 mb-4">
+          <LinkItem 
+            href="https://github.com/panchalurvisha" 
+            onHover={() => playSound('hover_icon')} 
+            isDark={isDark} 
+            label="GitHub"
+            icon={
+              <svg viewBox="0 0 24 24" width="46" height="46" fill={isDark ? '#ffffff' : '#181717'}>
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+              </svg>
+            } 
+          />
+          <LinkItem 
+            href="https://www.linkedin.com/in/urvisha-panchal-9423933b9/" 
+            onHover={() => playSound('hover_icon')} 
+            isDark={isDark} 
+            label="LinkedIn"
+            icon={
+              <svg viewBox="0 0 24 24" width="46" height="46" fill="#0A66C2">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            } 
+          />
+          <LinkItem 
+            href="mailto:panchalurvisha147@gmail.com" 
+            onHover={() => playSound('hover_icon')} 
+            isDark={isDark} 
+            label="Email"
+            icon={
+              <svg viewBox="0 0 24 24" width="46" height="46" fill="#EA4335">
+                <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+              </svg>
+            } 
+          />
+          <LinkItem 
+            href="/resume.pdf" 
+            onHover={() => playSound('hover_icon')} 
+            isDark={isDark} 
+            label="CV / Resume"
+            icon={
+              <svg viewBox="0 0 24 24" width="46" height="46" fill={isDark ? '#a2e1e9' : '#ff9800'}>
+                <path d="M12 16l4-5h-3V4h-2v7H8l4 5zm9-13h-6v2h6v14H3V5h6V3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+              </svg>
+            } 
+          />
         </div>
       </div>
     </DesktopWindow>
