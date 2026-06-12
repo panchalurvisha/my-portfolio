@@ -185,21 +185,4 @@ export const BunnyPeek = ({ isDark }) => {
   );
 };
 
-function StickerShell({ isDark, children }) {
-  const c = palette(isDark);
-  return (
-    <svg className="sticker-icon" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-      <path d="M18 31c10-18 27-19 39-10 17-5 31 4 34 22 3 20-11 38-34 43-23 4-45-4-50-23-3-11 1-23 11-32Z" fill={c.paper} stroke={c.ink} strokeWidth="3.5" strokeLinejoin="round" />
-      {children(c)}
-    </svg>
-  );
-}
 
-export const TwitterSticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <path d="M29 43c12 14 28 17 45 4-3 17-14 28-34 28-7 0-13-2-18-5 7 0 12-2 16-6-6-1-10-4-12-9 3 1 5 1 8 0-6-2-10-7-10-14 2 1 4 2 5 2Z" fill={c.ink} />}</StickerShell>;
-export const YouTubeSticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <><rect x="27" y="39" width="47" height="29" rx="8" fill={c.ink} /><path d="m47 47 15 7-15 8V47Z" fill={c.paper} /></>}</StickerShell>;
-export const KofiSticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <><path d="M29 40h34l-5 31H35l-6-31Z" fill={c.sky} stroke={c.ink} strokeWidth="3" /><path d="M63 47c12 0 12 17-3 17" stroke={c.ink} strokeWidth="5" strokeLinecap="round" /><path d="m42 51 7 7 8-7" fill="none" stroke={c.accent} strokeWidth="4" strokeLinecap="round" /></>}</StickerShell>;
-export const DiscordSticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <><path d="M30 44c13-9 27-9 40 0l6 25-12-6c-9 4-18 4-28 0l-12 6 6-25Z" fill={c.ink} /><circle cx="42" cy="55" r="4" fill={c.paper} /><circle cx="58" cy="55" r="4" fill={c.paper} /></>}</StickerShell>;
-export const InstagramSticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <><rect x="31" y="35" width="38" height="38" rx="12" stroke={c.ink} strokeWidth="5" /><circle cx="50" cy="54" r="9" stroke={c.ink} strokeWidth="5" /><circle cx="62" cy="43" r="3" fill={c.accent} /></>}</StickerShell>;
-export const BlueskySticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <path d="M50 53c-10-22-25-26-25-9 0 12 9 20 20 16-9 12 1 19 5 7 4 12 14 5 5-7 11 4 20-4 20-16 0-17-15-13-25 9Z" fill={c.sky} stroke={c.ink} strokeWidth="3" />}</StickerShell>;
-export const InPrntSticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <><rect x="27" y="39" width="22" height="25" fill={c.ink} /><path d="M55 42h17M55 52h14M55 62h18" stroke={c.ink} strokeWidth="5" strokeLinecap="round" /></>}</StickerShell>;
-export const MerchSticker = ({ isDark }) => <StickerShell isDark={isDark}>{(c) => <><path d="M34 42h32l9 12-10 8-5-6v19H40V56l-5 6-10-8 9-12Z" fill={c.sky} stroke={c.ink} strokeWidth="3" strokeLinejoin="round" /><path d="M44 50c4 4 8 4 12 0" stroke={c.accent} strokeWidth="3" strokeLinecap="round" /></>}</StickerShell>;
