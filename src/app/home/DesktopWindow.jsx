@@ -3,15 +3,36 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSound } from './useSound';
 
+function getViewportSize() {
+  if (typeof window === 'undefined') return { width: 0, height: 0 };
+  return { width: window.innerWidth, height: window.innerHeight };
+}
+
+function getCenteredPosition(width, height) {
+  if (typeof window === 'undefined') return { x: 0, y: 0 };
+
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const isMobile = w < 768;
+  const cardWidth = isMobile ? w - 32 : width;
+  const cardHeight = isMobile ? h - 64 : height;
+
+  return {
+    x: Math.max(0, (w - cardWidth) / 2),
+    y: Math.max(0, (h - cardHeight) / 2)
+  };
+}
+
 export default function DesktopWindow({ title, isDark, onClose, children, width = 728, height = 440 }) {
   const [isMaximized, setIsMaximized] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [zIndex, setZIndex] = useState(50);
   const { playSound } = useSound();
   
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState(() => getCenteredPosition(width, height));
   const [isDragging, setIsDragging] = useState(false);
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const [windowSize, setWindowSize] = useState(getViewportSize);
   const dragRef = useRef(null);
   
   useEffect(() => {
@@ -19,21 +40,8 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
       const handleResize = () => {
         setWindowSize({ width: window.innerWidth, height: window.innerHeight });
       };
-      
-      handleResize();
+
       window.addEventListener('resize', handleResize);
-      
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const isMobile = w < 768;
-      const cardWidth = isMobile ? w - 32 : width;
-      const cardHeight = isMobile ? h - 64 : height;
-      
-      setPosition({
-        x: Math.max(0, (w - cardWidth) / 2),
-        y: Math.max(0, (h - cardHeight) / 2)
-      });
-      
       return () => window.removeEventListener('resize', handleResize);
     }
   }, [width, height]);
@@ -85,26 +93,41 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
 
   if (w === 0) return null;
 
+  const closeWindow = () => {
+    setIsClosing(true);
+    const soundId = title === 'frequently asked questions' ? 'faq' : title;
+    playSound('close_' + soundId);
+    window.setTimeout(onClose, 180);
+  };
+
+  const minimizeExit = {
+    opacity: 0,
+    scale: 0.2,
+    x: -position.x + 54,
+    y: windowSize.height - position.y - 72,
+    filter: 'blur(5px)',
+  };
+
   return (
     <>
       <AnimatePresence>
-        {!isMinimized && (
+        {!isMinimized && !isClosing && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20, filter: 'blur(6px)' }}
             animate={
               isMaximized ? {
                 left: 0, top: 0,
                 width: '100vw', height: '100vh',
-                opacity: 1, scale: 1, y: 0,
+                opacity: 1, scale: 1, y: 0, filter: 'blur(0px)',
                 borderRadius: '0px'
               } : {
                 left: position.x, top: position.y,
                 width: normalWidth, height: normalHeight,
-                opacity: 1, scale: 1, y: 0,
+                opacity: 1, scale: 1, y: 0, filter: 'blur(0px)',
                 borderRadius: '12px'
               }
             }
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            exit={isMinimized ? minimizeExit : { opacity: 0, scale: 0.86, y: 20, filter: 'blur(8px)' }}
             transition={
               isDragging 
                 ? { duration: 0 } 
@@ -121,43 +144,40 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
               style={{ touchAction: "none" }}
             >
               {/* macOS Window Controls */}
-              <div className="flex items-center gap-2 w-[60px] group">
+              <div className="flex items-center gap-2 w-[72px] group">
                 <button 
                   onClick={(e) => { 
                     e.stopPropagation(); 
-                    const soundId = title === 'frequently asked questions' ? 'faq' : title;
-                    playSound('close_' + soundId); 
-                    onClose(); 
+                    closeWindow();
                   }}
-                  className="w-3 h-3 rounded-full bg-[#ff5f56] flex items-center justify-center"
+                  className="w-[15px] h-[15px] rounded-full bg-[#ff5f56] text-[#5f100d] flex items-center justify-center shadow-[inset_0_-1px_0_rgba(0,0,0,0.18)] hover:scale-110 transition-transform"
                   title="Close"
                 >
-                  <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#4d0000]" viewBox="0 0 12 12" fill="currentColor">
-                    <path d="M11.854 1.854a.5.5 0 00-.708-.708L6 6.293 1.854 1.146a.5.5 0 10-.708.708L5.293 7l-4.147 4.146a.5.5 0 00.708.708L6 7.707l4.146 4.147a.5.5 0 00.708-.708L6.707 7l4.147-4.146z" stroke="currentColor" strokeWidth="0.5"/>
+                  <svg className="w-[8px] h-[8px] opacity-75 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                    <path d="M3 3l6 6M9 3 3 9" />
                   </svg>
                 </button>
                 <button 
                   onClick={(e) => { e.stopPropagation(); playSound('minimize'); setIsMinimized(true); }}
-                  className="w-3 h-3 rounded-full bg-[#ffbd2e] flex items-center justify-center"
+                  className="w-[15px] h-[15px] rounded-full bg-[#ffbd2e] text-[#6c4700] flex items-center justify-center shadow-[inset_0_-1px_0_rgba(0,0,0,0.18)] hover:scale-110 transition-transform"
                   title="Minimize"
                 >
-                  <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#995b00]" viewBox="0 0 12 2" fill="currentColor">
-                    <rect width="12" height="2" />
+                  <svg className="w-[8px] h-[8px] opacity-75 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+                    <path d="M3 7h6" />
                   </svg>
                 </button>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); setIsMaximized(!isMaximized); }}
-                  className="w-3 h-3 rounded-full bg-[#28c940] flex items-center justify-center"
+                  onClick={(e) => { e.stopPropagation(); playSound('maximize'); setIsMaximized(!isMaximized); }}
+                  className="w-[15px] h-[15px] rounded-full bg-[#28c940] text-[#0d5522] flex items-center justify-center shadow-[inset_0_-1px_0_rgba(0,0,0,0.18)] hover:scale-110 transition-transform"
                   title={isMaximized ? "Restore" : "Maximize"}
                 >
                   {isMaximized ? (
-                    <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#006500]" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="3" y="1" width="8" height="8" />
-                      <path d="M1 3v8h8" />
+                    <svg className="w-[8px] h-[8px] opacity-75 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 2h6v6M2 4h6v6H2z" />
                     </svg>
                   ) : (
-                    <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#006500]" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="1" y="1" width="10" height="10" />
+                    <svg className="w-[8px] h-[8px] opacity-75 group-hover:opacity-100 transition-opacity" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 3h6v6H3z" />
                     </svg>
                   )}
                 </button>
@@ -167,7 +187,7 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
               <span className={`text-[13px] font-semibold tracking-wide select-none ${isDark ? 'text-white/80' : 'text-black/60'}`}>{title}</span>
               
               {/* Right Spacer for centering */}
-              <div className="w-[60px]"></div>
+              <div className="w-[72px]"></div>
             </div>
 
             {/* Inner Content */}
@@ -198,9 +218,7 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
             <button 
               onClick={(e) => { 
                 e.stopPropagation(); 
-                const soundId = title === 'frequently asked questions' ? 'faq' : title;
-                playSound('close_' + soundId); 
-                onClose(); 
+                closeWindow();
               }}
               className="ml-2 hover:opacity-70 transition-opacity"
               title="Close"

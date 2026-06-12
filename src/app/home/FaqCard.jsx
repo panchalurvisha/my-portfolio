@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import DesktopWindow from './DesktopWindow';
+import { UrvishaAvatar } from './Icons';
 
 function AccordionItem({ title, content, isOpen, onClick, isDark }) {
   return (
@@ -27,6 +28,15 @@ export default function FaqCard({ isDark, onClose, openFaq, toggleFaq }) {
   return (
     <DesktopWindow title="frequently asked questions" isDark={isDark} onClose={onClose} width={728} height={440}>
       <div className="flex-1 overflow-y-auto px-6 py-6 relative custom-scroll">
+        <div className={`mb-5 grid grid-cols-[1fr_auto] items-center gap-4 rounded-[8px] border p-4 ${isDark ? 'border-white/10 bg-[#16212e] text-white' : 'border-[#e7f1f7] bg-[#f8fcff] text-[#4d4d4d]'}`}>
+          <div>
+            <p className="font-mono text-[14px] font-bold tracking-wide">quick answers</p>
+            <p className={`mt-1 text-[14px] ${isDark ? 'text-white/68' : 'text-[#737373]'}`}>A few notes about my work, availability, and process.</p>
+          </div>
+          <div className="h-[84px] w-[96px] overflow-hidden rounded-[12px]">
+            <UrvishaAvatar isDark={isDark} pose="thinking" />
+          </div>
+        </div>
         <AccordionItem 
           title="what software do you use?" 
           isOpen={openFaq === 0} 

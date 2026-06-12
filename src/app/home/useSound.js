@@ -49,22 +49,22 @@ export function SoundProvider({ children }) {
     gain.connect(audioCtxRef.current.destination);
 
     // Helpers
-    const playPop = (freqStart, freqEnd, duration) => {
+    const playPop = (freqStart, freqEnd, duration, vol = 0.12) => {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freqStart, t);
       osc.frequency.exponentialRampToValueAtTime(freqEnd, t + duration);
       gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.3, t + (duration / 2));
+      gain.gain.linearRampToValueAtTime(vol, t + (duration / 2));
       gain.gain.exponentialRampToValueAtTime(0.01, t + duration);
       osc.start(t);
       osc.stop(t + duration);
     };
 
-    const playClick = (freqStart, freqEnd, duration) => {
+    const playClick = (freqStart, freqEnd, duration, vol = 0.045) => {
       osc.type = 'square';
       osc.frequency.setValueAtTime(freqStart, t);
       osc.frequency.exponentialRampToValueAtTime(freqEnd, t + duration);
-      gain.gain.setValueAtTime(0.1, t);
+      gain.gain.setValueAtTime(vol, t);
       gain.gain.exponentialRampToValueAtTime(0.01, t + duration);
       osc.start(t);
       osc.stop(t + duration);
@@ -80,97 +80,97 @@ export function SoundProvider({ children }) {
       osc.stop(t + duration);
     };
 
-    const playProfessionalOpen = () => {
-      // Literal professional mouse/UI click (extremely sharp and short)
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(1000, t);
-      osc.frequency.exponentialRampToValueAtTime(100, t + 0.02);
+    const playWindowOpen = () => {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(360, t);
+      osc.frequency.exponentialRampToValueAtTime(760, t + 0.11);
       gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.1, t + 0.002);
-      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.02);
+      gain.gain.linearRampToValueAtTime(0.08, t + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.11);
       osc.start(t);
-      osc.stop(t + 0.02);
+      osc.stop(t + 0.11);
     };
 
-    const playProfessionalClose = () => {
-      // Slightly lower, softer "tick"
+    const playWindowClose = () => {
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, t);
-      osc.frequency.exponentialRampToValueAtTime(100, t + 0.04);
+      osc.frequency.setValueAtTime(620, t);
+      osc.frequency.exponentialRampToValueAtTime(180, t + 0.16);
       gain.gain.setValueAtTime(0, t);
-      gain.gain.linearRampToValueAtTime(0.15, t + 0.005);
-      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.04);
+      gain.gain.linearRampToValueAtTime(0.06, t + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.01, t + 0.16);
       osc.start(t);
-      osc.stop(t + 0.04);
+      osc.stop(t + 0.16);
     };
 
     switch (type) {
       // HOVER SOUNDS
       case 'hover_icon':
-        playBlip(900, 0.05, 0.03);
+      case 'hover_tick':
+        playBlip(920, 0.035, 0.018);
         break;
       case 'hover_footer':
-        playBlip(600, 0.05, 0.03);
+        playBlip(640, 0.04, 0.018);
         break;
 
       case 'hover_star':
-        if (typeof window !== 'undefined') {
-          const starAudio = new Audio('/universfield-new-notification-051-494246.mp3');
-          starAudio.play().catch(e => console.warn("Audio play failed:", e));
-        }
+        playPop(520, 880, 0.12, 0.07);
         break;
       case 'hover_frog':
-        playPop(150, 100, 0.1);
+        playPop(150, 100, 0.1, 0.07);
         break;
       case 'hover_face':
-        playPop(300, 600, 0.15);
+        playPop(300, 600, 0.15, 0.08);
         break;
 
       // GENERIC DESKTOP
       case 'iconClick':
-        playClick(800, 300, 0.05);
+      case 'cta_click':
+        playClick(800, 300, 0.05, 0.04);
         break;
       case 'theme_toggle':
-        if (typeof window !== 'undefined') {
-          const themeAudio = new Audio('/universfield-new-notification-062-494544.mp3');
-          themeAudio.play().catch(e => console.warn("Audio play failed:", e));
-        }
+        playPop(420, 780, 0.16, 0.075);
         break;
       case 'minimize':
+      case 'dock':
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(600, t);
         osc.frequency.exponentialRampToValueAtTime(200, t + 0.15);
-        gain.gain.setValueAtTime(0.15, t);
+        gain.gain.setValueAtTime(0.06, t);
         gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
         osc.start(t);
         osc.stop(t + 0.15);
         break;
       case 'restore':
-        playPop(400, 600, 0.1);
+        playPop(360, 640, 0.1, 0.075);
+        break;
+      case 'maximize':
+        playPop(300, 520, 0.12, 0.065);
         break;
 
       // PROFESSIONAL UNIFORM CARD SOUNDS
+      case 'open_window':
       case 'open_about':
       case 'open_links':
       case 'open_work':
       case 'open_faq':
       case 'open_contact':
       case 'open':
-        playProfessionalOpen();
+        playWindowOpen();
         break;
 
+      case 'close_window':
       case 'close_about':
       case 'close_links':
       case 'close_work':
       case 'close_faq':
       case 'close_contact':
       case 'close':
-        playProfessionalClose();
+        playWindowClose();
         break;
 
       default:
         // fallback
-        playProfessionalOpen();
+        playWindowOpen();
         break;
     }
   }, [isMuted]);

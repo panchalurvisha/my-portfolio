@@ -1,22 +1,17 @@
 "use client";
 
 import React, { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  SunIcon,
-  MoonIcon,
-  SpeakerIcon,
   AboutIcon,
   LinksIcon,
   WorkIcon,
   FaqIcon,
   ContactIcon,
-  TwitterIcon,
-  YouTubeIcon,
-  InstagramIcon,
+  UrvishaAvatar,
+  BunnyPeek,
 } from './Icons';
-
 import { SoundProvider, useSound } from './useSound';
-
 import AboutCard from './AboutCard';
 import LinksCard from './LinksCard';
 import WorkCard from './WorkCard';
@@ -24,6 +19,15 @@ import FaqCard from './FaqCard';
 import ContactCard from './ContactCard';
 import ThemeSwitch from './ThemeSwitch';
 import SoundSwitch from './SoundSwitch';
+import ResumeModal from './ResumeModal';
+
+const navItems = [
+  { id: 'about', label: 'about', icon: AboutIcon },
+  { id: 'links', label: 'links', icon: LinksIcon },
+  { id: 'work', label: 'work', icon: WorkIcon },
+  { id: 'faq', label: 'faq', icon: FaqIcon },
+  { id: 'contact', label: 'contact', icon: ContactIcon },
+];
 
 export default function Hero() {
   return (
@@ -36,168 +40,220 @@ export default function Hero() {
 function HeroContent() {
   const [isDark, setIsDark] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
-  const { isMuted, toggleMute, playSound } = useSound();
   const [openFaq, setOpenFaq] = useState(1);
+  const [windowState, setWindowState] = useState('open');
+  const [showResume, setShowResume] = useState(false);
+  const { isMuted, toggleMute, playSound } = useSound();
+
+  const themeClasses = isDark
+    ? 'bg-[#121820] text-white selection:bg-[#2c6086]'
+    : 'bg-[#f8fcff] text-[#33424d] selection:bg-[#a5d5f8]';
+
+  const openCard = (id) => {
+    playSound('iconClick');
+    setTimeout(() => playSound(`open_${id}`), 80);
+    setActiveCard(id);
+  };
 
   const toggleTheme = () => {
     playSound('theme_toggle');
-    setIsDark(!isDark);
+    setIsDark((value) => !value);
   };
 
-  const toggleFaq = (index) => {
-    setOpenFaq(openFaq === index ? null : index);
+  const closeHome = () => {
+    playSound('close_window');
+    setWindowState('closed');
+  };
+
+  const restoreHome = () => {
+    playSound('restore');
+    setWindowState('open');
   };
 
   return (
-    <div className={`min-h-screen w-full relative overflow-hidden transition-colors duration-300 font-sans flex flex-col ${isDark ? 'bg-[#1f1f1f] selection:bg-[#2c6086]' : 'bg-white selection:bg-[#a5d5f8]'} selection:text-white`}>
-      {/* Top Left Icons */}
-      <div className="absolute top-6 left-6 flex items-center gap-5 z-20">
-        <div onMouseEnter={() => playSound('hover_icon')} className="flex items-center">
+    <div className={`min-h-[100svh] w-full relative overflow-hidden transition-colors duration-500 font-sans ${themeClasses} selection:text-white`}>
+      <AnimatedBackground isDark={isDark} />
+
+      <div className="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-4 z-30">
+        <div onMouseEnter={() => playSound('hover_tick')} className="flex items-center">
           <ThemeSwitch isDark={isDark} onToggle={toggleTheme} />
         </div>
-        <div onMouseEnter={() => playSound('hover_icon')} className="flex items-center" title={isMuted ? "Unmute sounds" : "Mute sounds"}>
+        <div onMouseEnter={() => playSound('hover_tick')} className="flex items-center" title={isMuted ? 'Unmute sounds' : 'Mute sounds'}>
           <SoundSwitch isMuted={isMuted} onToggle={() => { playSound('iconClick'); toggleMute(); }} />
         </div>
       </div>
 
-      {/* Bottom Wave Background */}
-      <div className={`absolute bottom-0 left-0 w-full h-[40%] z-0 transition-colors duration-300 ${isDark ? 'bg-gradient-to-b from-[#215a7d] to-[#123145]' : 'bg-[#a8d3fc]'}`}>
-        <svg
-          className="absolute -top-[4vw] left-0 w-full h-[4vw] transition-colors duration-300 block"
-          viewBox="0 0 1440 100"
-          preserveAspectRatio="none"
+      <main className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-4 pb-24 pt-16 sm:px-6 sm:pb-24 sm:pt-16 lg:pb-20 lg:pt-14">
+        <div className="relative w-full max-w-[980px]">
+
+
+          <AnimatePresence mode="wait">
+            {windowState !== 'closed' && windowState !== 'minimized' && (
+              <motion.section
+                key="home-window"
+                layout
+                initial={{ opacity: 0, scale: 0.88, y: 42, filter: 'blur(8px)' }}
+                animate={{
+                  opacity: 1,
+                  scale: windowState === 'maximized' ? 1.035 : 1,
+                  y: 0,
+                  filter: 'blur(0px)',
+                }}
+                exit={{ opacity: 0, scale: 0.78, y: 48, filter: 'blur(10px)' }}
+                transition={{ type: 'spring', stiffness: 230, damping: 24, mass: 0.9 }}
+                className={`relative z-10 flex h-[clamp(500px,calc(100svh-148px),620px)] w-full flex-col overflow-hidden rounded-[18px] border shadow-[0_28px_90px_rgba(31,66,95,0.24)] backdrop-blur-2xl transition-colors duration-500 ${
+                  isDark ? 'border-white/15 bg-[#172637]/82' : 'border-white/70 bg-white/78'
+                }`}
+              >
+                <TitleBar
+                  isDark={isDark}
+                  state={windowState}
+                  onMinimize={() => {
+                    playSound('dock');
+                    setWindowState('minimized');
+                  }}
+                  onMaximize={() => {
+                    playSound('maximize');
+                    setWindowState((value) => value === 'maximized' ? 'open' : 'maximized');
+                  }}
+                  onClose={closeHome}
+                />
+
+                <div className="grid min-h-0 flex-1 items-center gap-6 px-5 py-6 sm:px-8 md:grid-cols-[1.04fr_0.96fr] md:px-10 md:py-7 lg:px-12">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.08, duration: 0.45 }}
+                    className="text-center md:text-left"
+                  >
+                    <div className={`mb-4 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[12px] font-semibold tracking-wide ${
+                      isDark ? 'border-white/15 bg-white/5 text-[#a2e1e9]' : 'border-[#cfe9fb] bg-[#eef9ff] text-[#3c748a]'
+                    }`}>
+                      <span className="h-2 w-2 rounded-full bg-[#7ad68d] shadow-[0_0_14px_rgba(122,214,141,0.8)]" />
+                      available for projects
+                    </div>
+
+                    <h1 className={`text-[40px] font-semibold leading-[1.02] tracking-normal sm:text-[52px] lg:text-[60px] ${
+                      isDark ? 'text-[#dffbff]' : 'text-[#ff9800]'
+                    }`}>
+                      i&apos;m urvisha
+                    </h1>
+                    <p className={`mt-3 max-w-[540px] text-[15px] leading-7 sm:text-[17px] ${
+                      isDark ? 'text-white/82' : 'text-[#5f707b]'
+                    }`}>
+                      Full stack developer crafting clean web apps, dashboards, ERP/CRM systems, and polished interfaces with a playful desktop spirit.
+                    </p>
+
+                    <div className="mt-7 grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
+                      {navItems.map((item) => (
+                        <IconItem
+                          key={item.id}
+                          item={item}
+                          isDark={isDark}
+                          onHover={() => playSound('hover_tick')}
+                          onClick={() => openCard(item.id)}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.14, duration: 0.45 }}
+                    className="relative mx-auto flex w-full max-w-[285px] items-center justify-center sm:max-w-[315px] md:max-w-[350px]"
+                    onMouseEnter={() => playSound('hover_face')}
+                  >
+                    <div className={`absolute inset-x-7 bottom-4 h-24 rounded-full blur-2xl ${isDark ? 'bg-[#4fc3d7]/20' : 'bg-[#a8d3fc]/55'}`} />
+                    <UrvishaAvatar isDark={isDark} pose="typing" />
+                  </motion.div>
+                </div>
+              </motion.section>
+            )}
+          </AnimatePresence>
+        </div>
+      </main>
+
+      <AnimatePresence>
+        {windowState === 'minimized' && (
+          <motion.button
+            key="home-dock"
+            initial={{ opacity: 0, x: -120, y: 40, scale: 0.72 }}
+            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -80, y: 24, scale: 0.8 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+            onClick={restoreHome}
+            onMouseEnter={() => playSound('hover_tick')}
+            className={`fixed bottom-5 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-[16px] border px-4 py-3 text-left shadow-[0_12px_36px_rgba(28,56,76,0.22)] backdrop-blur-xl transition-transform hover:-translate-y-1 ${
+              isDark ? 'border-white/15 bg-[#172637]/90 text-white' : 'border-white/80 bg-white/88 text-[#35424a]'
+            }`}
+          >
+            <span className={`grid h-9 w-9 place-items-center rounded-[9px] ${isDark ? 'bg-[#223a4f]' : 'bg-[#eaf8ff]'}`}>
+              <ContactIcon isDark={isDark} />
+            </span>
+            <span>
+              <span className="block font-mono text-[13px] font-bold">home</span>
+              <span className={`block text-[12px] ${isDark ? 'text-white/60' : 'text-[#6c7d88]'}`}>click to restore</span>
+            </span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {windowState === 'closed' && (
+          <motion.button
+            key="home-closed"
+            initial={{ opacity: 0, scale: 0.9, y: 18 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 18 }}
+            onClick={() => {
+              playSound('open_window');
+              setWindowState('open');
+            }}
+            className={`fixed left-1/2 top-1/2 z-40 -translate-x-1/2 -translate-y-1/2 rounded-[14px] border px-6 py-4 font-mono text-sm font-bold shadow-[0_16px_50px_rgba(28,56,76,0.22)] backdrop-blur-xl transition-transform hover:scale-[1.03] ${
+              isDark ? 'border-white/15 bg-[#172637]/90 text-[#a2e1e9]' : 'border-white/80 bg-white/88 text-[#ff9800]'
+            }`}
+          >
+            Open portfolio
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {activeCard === 'about' && <AboutCard isDark={isDark} onClose={() => setActiveCard(null)} />}
+      {activeCard === 'links' && <LinksCard isDark={isDark} onClose={() => setActiveCard(null)} />}
+      {activeCard === 'work' && <WorkCard isDark={isDark} onClose={() => setActiveCard(null)} />}
+      {activeCard === 'faq' && <FaqCard isDark={isDark} onClose={() => setActiveCard(null)} openFaq={openFaq} toggleFaq={(index) => setOpenFaq(openFaq === index ? null : index)} />}
+      {activeCard === 'contact' && <ContactCard isDark={isDark} onClose={() => setActiveCard(null)} />}
+
+      <footer className={`absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-[18px] border px-3 py-2 shadow-[0_12px_38px_rgba(43,86,118,0.16)] backdrop-blur-xl ${
+        isDark ? 'border-white/12 bg-[#172637]/58' : 'border-white/70 bg-white/62'
+      }`}>
+        <button
+          onClick={() => openCard('contact')}
+          onMouseEnter={() => playSound('hover_footer')}
+          className={`dock-item rounded-[14px] px-4 py-2 text-[13px] font-bold tracking-wide shadow-[0_10px_28px_rgba(43,86,118,0.18)] transition-all hover:-translate-y-1 hover:scale-[1.04] ${
+            isDark ? 'bg-[#a2e1e9] text-[#10202b] hover:shadow-[0_14px_34px_rgba(162,225,233,0.24)]' : 'bg-[#35424a] text-white hover:shadow-[0_14px_34px_rgba(53,66,74,0.2)]'
+          }`}
         >
-          <path
-            fill={isDark ? "#215a7d" : "#a8d3fc"}
-            d="M0,50 C320,80 420,20 720,50 C1020,80 1120,20 1440,50 L1440,100 L0,100 Z"
-          />
-          {isDark && (
-            <path
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="4"
-              vectorEffect="non-scaling-stroke"
-              d="M0,50 C320,80 420,20 720,50 C1020,80 1120,20 1440,50"
-            />
-          )}
-        </svg>
-      </div>
+          Let&apos;s Talk
+        </button>
+        <span className={`hidden rounded-[12px] px-3 py-2 text-xs sm:block ${isDark ? 'text-white/64' : 'text-[#687b87]'}`}>2026 Urvisha Panchal</span>
+      </footer>
 
-      {/* Frog Character */}
       <div
-        className="absolute bottom-20 md:bottom-6 right-2 md:right-10 z-10 cursor-pointer hover:scale-105 transition-transform"
-        onMouseEnter={() => playSound('hover_frog')}
+        className="absolute bottom-0 right-4 sm:right-8 z-20 w-16 sm:w-20 cursor-pointer hover:scale-105 transition-transform"
+        onMouseEnter={() => playSound('hover_star')}
+        onClick={() => { playSound('iconClick'); setShowResume(true); }}
       >
-        <img src="/hero/f4d70058_transparent.gif" alt="character" className="w-[80px] h-[60px] md:w-[120px] md:h-[90px] object-contain" />
+        <BunnyPeek isDark={isDark} />
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 px-4">
-
-        <div className="relative w-full max-w-[760px] mb-4">
-
-          {/* Main Home Window */}
-          <div className="relative w-full">
-            {/* Star Character */}
-            <div
-              className="absolute -top-[65px] md:-top-[85px] left-[10px] md:left-[16px] z-20 cursor-pointer group animate-[bounce_3s_infinite]"
-              onMouseEnter={() => playSound('hover_star')}
-            >
-              {/* Sparkles */}
-              <div className="absolute -top-4 -left-4 text-[#ffbd2e] text-lg opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-300 pointer-events-none">✨</div>
-              <div className="absolute top-8 -right-6 text-[#ffbd2e] text-sm opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-500 delay-100 pointer-events-none">✨</div>
-
-              {/* Speech Bubble */}
-              <div className="absolute top-1/2 -translate-y-1/2 left-full ml-2 md:ml-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 bg-white text-black font-bold px-3 py-1 rounded-2xl shadow-lg whitespace-nowrap z-30 pointer-events-none scale-90 group-hover:scale-100 origin-left">
-                Hiii 👋
-                <div className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-0 h-0 border-t-[5px] border-t-transparent border-r-[6px] border-r-white border-b-[5px] border-b-transparent"></div>
-              </div>
-
-              {/* Character Image */}
-              <img
-                src="/hero/download_bg_removed.png"
-                alt="character"
-                className="w-[75px] md:w-[95px] h-auto object-contain transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
-              />
-            </div>
-
-            {/* Home Window Card */}
-            <div className={`relative z-10 rounded-xl overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col w-full min-h-[360px] md:h-[440px] h-auto transition-colors duration-300 backdrop-blur-xl ${isDark ? 'bg-[#182635]/70 border border-white/20' : 'bg-white/70 border border-white/50'}`}>
-              {/* Top Bar */}
-              <div className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 ${isDark ? 'bg-[#1c1c1c]/40 border-b border-white/10' : 'bg-black/5 border-b border-black/5'}`}>
-                {/* macOS Window Controls */}
-                <div className="flex items-center gap-2 w-[60px]">
-                  <div className="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
-                  <div className="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
-                  <div className="w-3 h-3 rounded-full bg-[#28c940]"></div>
-                </div>
-
-                {/* Title */}
-                <span className={`text-[13px] font-semibold tracking-wide select-none ${isDark ? 'text-white/80' : 'text-black/60'}`}>home</span>
-
-                {/* Right Spacer for centering */}
-                <div className="w-[60px]"></div>
-              </div>
-
-              {/* Window Body */}
-              <div className="flex-1 flex flex-col items-center justify-center relative p-6">
-
-                <h1 className="text-[40px] sm:text-[50px] md:text-[60px] leading-tight mb-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-center">
-                  <div className="relative animate-friendly-hi cursor-pointer" onMouseEnter={() => playSound('hover_face')}>
-                    <img 
-                      src="/hero/ad6c746dae7edb887d8c60a0727dd4df_bg_removed.png" 
-                      alt="Urvisha" 
-                      className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] object-contain rounded-2xl" 
-                    />
-                  </div>
-                  <span className={`font-medium tracking-tight transition-colors duration-300 ${isDark ? 'text-[#a2e1e9]' : 'text-[#ff9800]'}`}>i'm urvisha</span>
-                </h1>
-
-                <p className={`text-[16px] sm:text-[18px] md:text-[20px] text-center mb-8 md:mb-12 transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#737373]'}`}>
-                  full stack developer
-                </p>
-
-                {/* Icons Row */}
-                <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-10 mt-2 max-w-[400px] md:max-w-none">
-                  <IconItem icon={<AboutIcon isDark={isDark} />} label="about" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_about'), 100); setActiveCard('about'); }} />
-                  <IconItem icon={<LinksIcon isDark={isDark} />} label="links" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_links'), 100); setActiveCard('links'); }} />
-                  <IconItem icon={<WorkIcon isDark={isDark} />} label="work" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_work'), 100); setActiveCard('work'); }} />
-                  <IconItem icon={<FaqIcon isDark={isDark} />} label="faq" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_faq'), 100); setActiveCard('faq'); }} />
-                  <IconItem icon={<ContactIcon isDark={isDark} />} label="contact" isDark={isDark} onHover={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); setTimeout(() => playSound('open_contact'), 100); setActiveCard('contact'); }} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Render Active Overlay Card */}
-          {activeCard === 'about' && <AboutCard isDark={isDark} onClose={() => setActiveCard(null)} />}
-          {activeCard === 'links' && <LinksCard isDark={isDark} onClose={() => setActiveCard(null)} />}
-          {activeCard === 'work' && <WorkCard isDark={isDark} onClose={() => setActiveCard(null)} />}
-          {activeCard === 'faq' && <FaqCard isDark={isDark} onClose={() => setActiveCard(null)} openFaq={openFaq} toggleFaq={toggleFaq} />}
-          {activeCard === 'contact' && <ContactCard isDark={isDark} onClose={() => setActiveCard(null)} />}
-
-        </div>
-
-      </div>
-
-      {/* Social Footer */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
-        <div className="flex items-center gap-3">
-          <SocialButton icon={<TwitterIcon isDark={isDark} />} isDark={isDark} onHover={() => playSound('hover_footer')} />
-          <SocialButton icon={<YouTubeIcon isDark={isDark} />} isDark={isDark} onHover={() => playSound('hover_footer')} />
-          <SocialButton icon={<InstagramIcon isDark={isDark} />} isDark={isDark} onHover={() => playSound('hover_footer')} />
-        </div>
-        <span className={`text-xs mt-1 transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#6b6b6b]'}`}>© 2025 Urvisha Panchal</span>
-      </div>
+      {showResume && <ResumeModal isDark={isDark} onClose={() => setShowResume(false)} />}
 
       <style dangerouslySetInnerHTML={{
         __html: `
-        .custom-scroll::-webkit-scrollbar {
-          width: 8px;
-        }
-        .custom-scroll::-webkit-scrollbar-track {
-          background: transparent;
-        }
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb {
           background: ${isDark ? '#4a6078' : '#d4d4d4'};
           border-radius: 4px;
@@ -207,23 +263,107 @@ function HeroContent() {
   );
 }
 
-function IconItem({ icon, label, isDark, onClick, onHover }) {
+function TitleBar({ isDark, state, onMinimize, onMaximize, onClose }) {
   return (
-    <div className="flex flex-col items-center gap-2 cursor-pointer group" onClick={onClick} onMouseEnter={onHover}>
-      <div className="transition-transform group-hover:-translate-y-1 [&>svg]:w-[55px] [&>svg]:h-[55px]">
-        {icon}
+    <div className={`flex h-12 shrink-0 items-center justify-between border-b px-4 sm:px-5 ${
+      isDark ? 'border-white/10 bg-[#0f1720]/48' : 'border-black/5 bg-white/45'
+    }`}>
+      <div className="flex w-[96px] items-center gap-2.5">
+        <WindowControl label="Close" tone="close" onClick={onClose} />
+        <WindowControl label="Minimize" tone="minimize" onClick={onMinimize} />
+        <WindowControl label={state === 'maximized' ? 'Restore' : 'Maximize'} tone="maximize" onClick={onMaximize} isRestore={state === 'maximized'} />
       </div>
-      <span className={`font-mono text-[14px] font-bold lowercase tracking-wider transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#333]'}`}>
-        {label}
-      </span>
+      <div className={`select-none font-mono text-[13px] font-bold tracking-wide ${isDark ? 'text-white/76' : 'text-[#647581]'}`}>
+        urvisha.desktop
+      </div>
+      <div className="w-[96px]" />
     </div>
   );
 }
 
-function SocialButton({ icon, isDark, onHover }) {
+function WindowControl({ label, tone, onClick, isRestore = false }) {
+  const color = {
+    close: 'bg-[#ff6b63] text-[#65120f]',
+    minimize: 'bg-[#ffc34d] text-[#6c4700]',
+    maximize: 'bg-[#45d46f] text-[#0d5522]',
+  }[tone];
+
   return (
-    <a href="#" onMouseEnter={onHover} className={`w-9 h-9 rounded-full flex items-center justify-center hover:opacity-80 transition-colors duration-300 ${isDark ? 'bg-white' : 'bg-[#4a4a4a]'} [&>svg]:w-[18px] [&>svg]:h-[18px]`}>
-      {icon}
-    </a>
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+      className={`group grid h-[18px] w-[18px] place-items-center rounded-full ${color} shadow-[inset_0_-1px_0_rgba(0,0,0,0.16)] transition-transform hover:scale-110`}
+    >
+      {tone === 'close' && (
+        <svg viewBox="0 0 12 12" className="h-[9px] w-[9px] opacity-75 transition-opacity group-hover:opacity-100" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+          <path d="M3 3l6 6M9 3 3 9" />
+        </svg>
+      )}
+      {tone === 'minimize' && (
+        <svg viewBox="0 0 12 12" className="h-[9px] w-[9px] opacity-75 transition-opacity group-hover:opacity-100" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+          <path d="M3 7h6" />
+        </svg>
+      )}
+      {tone === 'maximize' && (
+        <svg viewBox="0 0 12 12" className="h-[9px] w-[9px] opacity-75 transition-opacity group-hover:opacity-100" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          {isRestore ? <path d="M4 2h6v6M2 4h6v6H2z" /> : <path d="M3 3h6v6H3z" />}
+        </svg>
+      )}
+    </button>
+  );
+}
+
+function IconItem({ item, isDark, onClick, onHover }) {
+  const Icon = item.icon;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={onHover}
+      className={`desktop-icon group flex min-h-[88px] flex-col items-center justify-center gap-1.5 rounded-[16px] border px-2.5 py-2.5 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.05] ${
+        isDark
+          ? 'border-white/10 bg-gradient-to-br from-white/[0.09] to-white/[0.025] hover:border-[#a2e1e9]/45 hover:shadow-[0_0_28px_rgba(162,225,233,0.14)]'
+          : 'border-[#d9edf8] bg-gradient-to-br from-white to-[#eef9ff]/70 hover:border-[#a8d3fc] hover:shadow-[0_0_28px_rgba(168,211,252,0.45)]'
+      }`}
+    >
+      <span className={`app-icon-frame grid h-[52px] w-[52px] place-items-center rounded-[14px] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_8px_18px_rgba(35,70,95,0.12)] ${
+        isDark ? 'bg-[#20364a]' : 'bg-white'
+      } [&>svg]:h-[42px] [&>svg]:w-[42px]`}>
+        <Icon isDark={isDark} />
+      </span>
+      <span className={`font-mono text-[13px] font-bold lowercase tracking-wide ${isDark ? 'text-white' : 'text-[#34404a]'}`}>
+        {item.label}
+      </span>
+    </button>
+  );
+}
+
+function AnimatedBackground({ isDark }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className={`absolute inset-0 transition-colors duration-500 ${
+        isDark
+          ? 'bg-[radial-gradient(circle_at_20%_10%,rgba(66,120,150,0.28),transparent_32%),radial-gradient(circle_at_82%_28%,rgba(162,225,233,0.13),transparent_28%)]'
+          : 'bg-[radial-gradient(circle_at_18%_8%,rgba(255,232,164,0.55),transparent_28%),radial-gradient(circle_at_82%_28%,rgba(175,225,255,0.58),transparent_30%)]'
+      }`} />
+      <svg className="ambient-bg" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+        <path className="ambient-wave slow" d="M0 612c198-66 339-54 520 7 213 71 392 71 920-31v312H0Z" fill={isDark ? '#1f5877' : '#a8d3fc'} opacity=".82" />
+        <path className="ambient-wave" d="M0 690c232-58 434-18 650 22 278 52 493 20 790-62v250H0Z" fill={isDark ? '#15384f' : '#c7e8ff'} opacity=".76" />
+        <g className="ambient-clouds" fill={isDark ? '#eafcff' : '#ffffff'} opacity={isDark ? '.08' : '.58'}>
+          <path d="M121 156c15-31 58-32 76-5 26-7 55 10 60 37H91c3-16 14-28 30-32Z" />
+          <path d="M1121 173c15-31 58-32 76-5 26-7 55 10 60 37h-166c3-16 14-28 30-32Z" />
+          <path d="M722 92c11-23 43-24 56-4 19-5 41 8 44 27H699c2-11 10-20 23-23Z" />
+        </g>
+        <g className="ambient-shapes" opacity={isDark ? '.22' : '.54'}>
+          <circle cx="280" cy="286" r="16" fill="#ffbf5a" />
+          <circle cx="1185" cy="360" r="12" fill="#7ad68d" />
+          <rect x="1030" y="118" width="28" height="28" rx="8" fill="#ff8a7a" />
+          <path d="M430 140 448 174h-36Z" fill="#a2e1e9" />
+        </g>
+      </svg>
+    </div>
   );
 }

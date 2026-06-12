@@ -2,12 +2,25 @@
 import React from 'react';
 import DesktopWindow from './DesktopWindow';
 import { useSound } from './useSound';
+import { UrvishaAvatar } from './Icons';
 
 function ProjectCard({ title, desc1, desc2, tech, isDark, link = "#", onHover }) {
   return (
     <a href={link} onMouseEnter={onHover} className={`block rounded-[8px] border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden flex flex-col ${isDark ? 'bg-[#1e293b]/50 border-gray-700 hover:border-gray-500' : 'bg-white border-gray-200 shadow-sm hover:border-gray-400'}`}>
       <div className={`w-full aspect-[16/9] relative border-b ${isDark ? 'bg-[#16212e] border-gray-700' : 'bg-[#e2e8f0] border-gray-200'}`}>
-        <img src="https://placehold.co/600x338/cbd5e1/64748b?text=Project+Image" alt={title} className="w-full h-full object-cover" />
+        <div className={`absolute inset-0 ${isDark ? 'bg-[radial-gradient(circle_at_25%_20%,rgba(162,225,233,0.22),transparent_32%),linear-gradient(135deg,#16212e,#22364a)]' : 'bg-[radial-gradient(circle_at_25%_20%,rgba(255,152,0,0.18),transparent_32%),linear-gradient(135deg,#f8fcff,#dff3ff)]'}`} />
+        <svg viewBox="0 0 360 204" className="absolute inset-0 h-full w-full" role="img" aria-label={`${title} interface illustration`}>
+          <rect x="40" y="38" width="280" height="128" rx="12" fill={isDark ? '#0f1822' : '#ffffff'} stroke={isDark ? '#3b5569' : '#c3ddea'} strokeWidth="3" />
+          <rect x="40" y="38" width="280" height="26" rx="12" fill={isDark ? '#203347' : '#eff9ff'} />
+          <circle cx="58" cy="51" r="4" fill="#ff6b63" />
+          <circle cx="72" cy="51" r="4" fill="#ffc34d" />
+          <circle cx="86" cy="51" r="4" fill="#45d46f" />
+          <rect x="64" y="86" width="86" height="13" rx="6.5" fill={isDark ? '#29435a' : '#d7edf9'} />
+          <rect x="64" y="112" width="196" height="10" rx="5" fill={isDark ? '#24384d' : '#e8f4fb'} />
+          <rect x="64" y="133" width="150" height="10" rx="5" fill={isDark ? '#24384d' : '#e8f4fb'} />
+          <rect x="232" y="84" width="54" height="54" rx="14" fill={isDark ? '#a2e1e9' : '#ffb13b'} opacity=".9" />
+          <path d="M248 112h22M259 101v22" stroke={isDark ? '#10202b' : '#ffffff'} strokeWidth="5" strokeLinecap="round" />
+        </svg>
       </div>
       <div className="p-5 flex-1 flex flex-col">
         <h4 className={`text-[19px] font-medium mb-3 transition-colors duration-300 ${isDark ? 'text-[#a2e1e9]' : 'text-[#ff9800]'}`}>{title}</h4>
@@ -15,7 +28,7 @@ function ProjectCard({ title, desc1, desc2, tech, isDark, link = "#", onHover })
           <p>{desc1}</p>
           {desc2 && <p className="line-clamp-3">{desc2}</p>}
         </div>
-        <div className="text-[13px] pt-4 border-t transition-colors duration-300 mt-auto ${isDark ? 'border-gray-700' : 'border-gray-200'}">
+        <div className={`text-[13px] pt-4 border-t transition-colors duration-300 mt-auto ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
           <span className={`font-semibold mr-2 transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-700'}`}>Tech Stack:</span>
           <span className={`transition-colors duration-300 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{tech}</span>
         </div>
@@ -40,9 +53,14 @@ export default function WorkCard({ isDark, onClose }) {
       <div className="flex-1 overflow-y-auto px-5 md:px-8 py-6 md:py-8 relative custom-scroll">
         
         {/* Banner */}
-        <div className={`w-full rounded-[8px] p-5 mb-8 transition-colors duration-300 shadow-sm ${isDark ? 'bg-[#2a3022] text-gray-200' : 'bg-[#fffdf0] text-[#555]'}`}>
-          <p className="mb-1 text-[16px] font-medium">Accepting freelance projects and full-time opportunities!</p>
-          <p className="text-[15px]">I build modern web applications, admin panels, dashboards, and business management systems. :)</p>
+        <div className={`grid w-full grid-cols-[1fr_auto] items-center gap-4 rounded-[8px] p-4 mb-7 transition-colors duration-300 shadow-sm ${isDark ? 'bg-[#2a3022] text-gray-200' : 'bg-[#fffdf0] text-[#555]'}`}>
+          <div>
+            <p className="mb-1 text-[16px] font-medium">Accepting freelance projects and full-time opportunities!</p>
+            <p className="text-[15px]">I build modern web applications, admin panels, dashboards, and business management systems. :)</p>
+          </div>
+          <div className="hidden h-[96px] w-[112px] overflow-hidden rounded-[12px] md:block">
+            <UrvishaAvatar isDark={isDark} pose="folder" />
+          </div>
         </div>
 
         {/* Skills Columns */}
