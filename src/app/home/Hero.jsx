@@ -22,6 +22,8 @@ import LinksCard from './LinksCard';
 import WorkCard from './WorkCard';
 import FaqCard from './FaqCard';
 import ContactCard from './ContactCard';
+import ThemeSwitch from './ThemeSwitch';
+import SoundSwitch from './SoundSwitch';
 
 export default function Hero() {
   return (
@@ -38,6 +40,7 @@ function HeroContent() {
   const [openFaq, setOpenFaq] = useState(1);
 
   const toggleTheme = () => {
+    playSound('theme_toggle');
     setIsDark(!isDark);
   };
 
@@ -49,12 +52,12 @@ function HeroContent() {
     <div className={`min-h-screen w-full relative overflow-hidden transition-colors duration-300 font-sans flex flex-col ${isDark ? 'bg-[#1f1f1f] selection:bg-[#2c6086]' : 'bg-white selection:bg-[#a5d5f8]'} selection:text-white`}>
       {/* Top Left Icons */}
       <div className="absolute top-6 left-6 flex items-center gap-5 z-20">
-        <button onMouseEnter={() => playSound('hover_icon')} onClick={() => { playSound('theme_toggle'); toggleTheme(); }} className="hover:opacity-70 transition-opacity [&>svg]:w-[24px] [&>svg]:h-[24px]">
-          {isDark ? <MoonIcon isDark={isDark} /> : <SunIcon isDark={isDark} />}
-        </button>
-        <button onMouseEnter={() => playSound('hover_icon')} onClick={() => { playSound('iconClick'); toggleMute(); }} className="hover:opacity-70 transition-opacity [&>svg]:w-[24px] [&>svg]:h-[24px]" title={isMuted ? "Unmute sounds" : "Mute sounds"}>
-          <SpeakerIcon isDark={isDark} isMuted={isMuted} />
-        </button>
+        <div onMouseEnter={() => playSound('hover_icon')} className="flex items-center">
+          <ThemeSwitch isDark={isDark} onToggle={toggleTheme} />
+        </div>
+        <div onMouseEnter={() => playSound('hover_icon')} className="flex items-center" title={isMuted ? "Unmute sounds" : "Mute sounds"}>
+          <SoundSwitch isMuted={isMuted} onToggle={() => { playSound('iconClick'); toggleMute(); }} />
+        </div>
       </div>
 
       {/* Bottom Wave Background */}
@@ -81,11 +84,11 @@ function HeroContent() {
       </div>
 
       {/* Frog Character */}
-      <div 
+      <div
         className="absolute bottom-20 md:bottom-6 right-2 md:right-10 z-10 cursor-pointer hover:scale-105 transition-transform"
         onMouseEnter={() => playSound('hover_frog')}
       >
-        <img src="/hero/froggert_stop.webp" alt="frog" className="w-[80px] h-[60px] md:w-[120px] md:h-[90px] object-contain" />
+        <img src="/hero/f4d70058_transparent.gif" alt="character" className="w-[80px] h-[60px] md:w-[120px] md:h-[90px] object-contain" />
       </div>
 
       {/* Main Content Area */}
@@ -96,25 +99,57 @@ function HeroContent() {
           {/* Main Home Window */}
           <div className="relative w-full">
             {/* Star Character */}
-            <div 
-              className="absolute -top-[55px] md:-top-[75px] left-[10px] md:left-[16px] -rotate-[15deg] transition-all duration-300 z-0 cursor-pointer hover:scale-110"
+            <div
+              className="absolute -top-[65px] md:-top-[85px] left-[10px] md:left-[16px] z-20 cursor-pointer group animate-[bounce_3s_infinite]"
               onMouseEnter={() => playSound('hover_star')}
             >
-              <img src="/hero/icon_star.webp" alt="star" className="w-[65px] h-[65px] md:w-[85px] md:h-[85px] object-contain" />
+              {/* Sparkles */}
+              <div className="absolute -top-4 -left-4 text-[#ffbd2e] text-lg opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-300 pointer-events-none">✨</div>
+              <div className="absolute top-8 -right-6 text-[#ffbd2e] text-sm opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-500 delay-100 pointer-events-none">✨</div>
+
+              {/* Speech Bubble */}
+              <div className="absolute top-1/2 -translate-y-1/2 left-full ml-2 md:ml-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 bg-white text-black font-bold px-3 py-1 rounded-2xl shadow-lg whitespace-nowrap z-30 pointer-events-none scale-90 group-hover:scale-100 origin-left">
+                Hiii 👋
+                <div className="absolute top-1/2 -translate-y-1/2 -left-[6px] w-0 h-0 border-t-[5px] border-t-transparent border-r-[6px] border-r-white border-b-[5px] border-b-transparent"></div>
+              </div>
+
+              {/* Character Image */}
+              <img
+                src="/hero/download_bg_removed.png"
+                alt="character"
+                className="w-[75px] md:w-[95px] h-auto object-contain transition-transform duration-300 ease-out group-hover:scale-110 group-hover:-rotate-6"
+              />
             </div>
 
             {/* Home Window Card */}
-            <div className={`relative z-10 rounded-lg overflow-hidden shadow-[0_6px_25px_rgba(0,0,0,0.12)] flex flex-col w-full min-h-[360px] md:h-[440px] h-auto transition-colors duration-300 ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}>
+            <div className={`relative z-10 rounded-xl overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col w-full min-h-[360px] md:h-[440px] h-auto transition-colors duration-300 backdrop-blur-xl ${isDark ? 'bg-[#182635]/70 border border-white/20' : 'bg-white/70 border border-white/50'}`}>
               {/* Top Bar */}
-              <div className={`h-[38px] w-full flex items-center px-4 transition-colors duration-300 ${isDark ? 'bg-[#1c1c1c]' : 'bg-[#4a4a4a]'}`}>
-                <span className="text-white text-[15px] font-medium tracking-wide">home</span>
+              <div className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 ${isDark ? 'bg-[#1c1c1c]/40 border-b border-white/10' : 'bg-black/5 border-b border-black/5'}`}>
+                {/* macOS Window Controls */}
+                <div className="flex items-center gap-2 w-[60px]">
+                  <div className="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#28c940]"></div>
+                </div>
+
+                {/* Title */}
+                <span className={`text-[13px] font-semibold tracking-wide select-none ${isDark ? 'text-white/80' : 'text-black/60'}`}>home</span>
+
+                {/* Right Spacer for centering */}
+                <div className="w-[60px]"></div>
               </div>
 
               {/* Window Body */}
               <div className="flex-1 flex flex-col items-center justify-center relative p-6">
 
-                <h1 className="text-[40px] sm:text-[50px] md:text-[60px] leading-tight mb-2 flex flex-col sm:flex-row items-center justify-center gap-0 sm:gap-2 text-center">
-                  <span className={`font-normal tracking-tight transition-colors duration-300 ${isDark ? 'text-white' : 'text-[#595959]'}`}>hi!</span>
+                <h1 className="text-[40px] sm:text-[50px] md:text-[60px] leading-tight mb-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-center">
+                  <div className="relative animate-friendly-hi cursor-pointer" onMouseEnter={() => playSound('hover_face')}>
+                    <img 
+                      src="/hero/ad6c746dae7edb887d8c60a0727dd4df_bg_removed.png" 
+                      alt="Urvisha" 
+                      className="w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] md:w-[70px] md:h-[70px] object-contain rounded-2xl" 
+                    />
+                  </div>
                   <span className={`font-medium tracking-tight transition-colors duration-300 ${isDark ? 'text-[#a2e1e9]' : 'text-[#ff9800]'}`}>i'm urvisha</span>
                 </h1>
 

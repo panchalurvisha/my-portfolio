@@ -11,7 +11,7 @@ export default function AboutCard({ isDark, onClose }) {
       <div className="px-5 md:px-8 pt-6 md:pt-8 pb-4 md:pb-6 flex-shrink-0 relative z-10 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 text-center md:text-left">
           <div onMouseEnter={() => playSound('hover_icon')} className="cursor-pointer hover:scale-105 transition-transform w-[90px] h-[90px] md:w-[120px] md:h-[120px] rounded-full overflow-hidden flex-shrink-0 border-2 border-transparent relative shadow-sm">
-            <img src="/about/avatar.webp" alt="avatar" className="w-full h-full object-cover" />
+            <img src="/about/4b37c7050bc575500e7c6965ae77a006.jpg" alt="avatar" className="w-full h-full object-cover" />
           </div>
           <div className="pt-1">
             <div className="flex items-baseline justify-center md:justify-start gap-3 mb-1">

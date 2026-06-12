@@ -122,6 +122,9 @@ export function SoundProvider({ children }) {
       case 'hover_frog':
         playPop(150, 100, 0.1);
         break;
+      case 'hover_face':
+        playPop(300, 600, 0.15);
+        break;
 
       // GENERIC DESKTOP
       case 'iconClick':

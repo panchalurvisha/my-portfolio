@@ -101,7 +101,7 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
                 left: position.x, top: position.y,
                 width: normalWidth, height: normalHeight,
                 opacity: 1, scale: 1, y: 0,
-                borderRadius: '8px'
+                borderRadius: '12px'
               }
             }
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -112,43 +112,16 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
             }
             onPointerDown={() => setZIndex(100)}
             style={{ zIndex }}
-            className={`fixed shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col transition-colors duration-300 overflow-hidden ${isDark ? 'bg-[#182635] border border-white' : 'bg-white border border-gray-300'}`}
+            className={`fixed shadow-[0_10px_35px_rgba(0,0,0,0.25)] flex flex-col transition-colors duration-300 overflow-hidden backdrop-blur-xl ${isDark ? 'bg-[#182635]/70 border border-white/20' : 'bg-white/70 border border-white/50'}`}
           >
             {/* Title Bar */}
             <div 
               onPointerDown={handlePointerDown}
-              className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 flex-shrink-0 ${isMaximized ? 'cursor-default' : 'cursor-move'} ${isDark ? 'bg-[#1c1c1c]' : 'bg-[#4a4a4a]'}`}
+              className={`h-[38px] w-full flex items-center justify-between px-4 transition-colors duration-300 flex-shrink-0 ${isMaximized ? 'cursor-default' : 'cursor-move'} ${isDark ? 'bg-[#1c1c1c]/40 border-b border-white/10' : 'bg-black/5 border-b border-black/5'}`}
               style={{ touchAction: "none" }}
             >
-              <span className="text-white text-[15px] font-mono tracking-wide select-none">{title}</span>
-              
-              {/* Window Controls */}
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); playSound('minimize'); setIsMinimized(true); }}
-                  className="text-white hover:opacity-70 transition-opacity flex items-center justify-center w-5 h-5"
-                  title="Minimize"
-                >
-                  <svg width="12" height="2" viewBox="0 0 12 2" fill="currentColor">
-                    <rect width="12" height="2" />
-                  </svg>
-                </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setIsMaximized(!isMaximized); }}
-                  className="text-white hover:opacity-70 transition-opacity flex items-center justify-center w-5 h-5"
-                  title={isMaximized ? "Restore" : "Maximize"}
-                >
-                  {isMaximized ? (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="3" y="1" width="8" height="8" />
-                      <path d="M1 3v8h8" />
-                    </svg>
-                  ) : (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="1" y="1" width="10" height="10" />
-                    </svg>
-                  )}
-                </button>
+              {/* macOS Window Controls */}
+              <div className="flex items-center gap-2 w-[60px] group">
                 <button 
                   onClick={(e) => { 
                     e.stopPropagation(); 
@@ -156,14 +129,45 @@ export default function DesktopWindow({ title, isDark, onClose, children, width 
                     playSound('close_' + soundId); 
                     onClose(); 
                   }}
-                  className="text-white hover:opacity-70 transition-opacity flex items-center justify-center w-5 h-5"
+                  className="w-3 h-3 rounded-full bg-[#ff5f56] flex items-center justify-center"
                   title="Close"
                 >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#4d0000]" viewBox="0 0 12 12" fill="currentColor">
                     <path d="M11.854 1.854a.5.5 0 00-.708-.708L6 6.293 1.854 1.146a.5.5 0 10-.708.708L5.293 7l-4.147 4.146a.5.5 0 00.708.708L6 7.707l4.146 4.147a.5.5 0 00.708-.708L6.707 7l4.147-4.146z" stroke="currentColor" strokeWidth="0.5"/>
                   </svg>
                 </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); playSound('minimize'); setIsMinimized(true); }}
+                  className="w-3 h-3 rounded-full bg-[#ffbd2e] flex items-center justify-center"
+                  title="Minimize"
+                >
+                  <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#995b00]" viewBox="0 0 12 2" fill="currentColor">
+                    <rect width="12" height="2" />
+                  </svg>
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setIsMaximized(!isMaximized); }}
+                  className="w-3 h-3 rounded-full bg-[#28c940] flex items-center justify-center"
+                  title={isMaximized ? "Restore" : "Maximize"}
+                >
+                  {isMaximized ? (
+                    <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#006500]" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="3" y="1" width="8" height="8" />
+                      <path d="M1 3v8h8" />
+                    </svg>
+                  ) : (
+                    <svg className="opacity-0 group-hover:opacity-100 transition-opacity w-[7px] h-[7px] text-[#006500]" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="1" y="1" width="10" height="10" />
+                    </svg>
+                  )}
+                </button>
               </div>
+
+              {/* Title */}
+              <span className={`text-[13px] font-semibold tracking-wide select-none ${isDark ? 'text-white/80' : 'text-black/60'}`}>{title}</span>
+              
+              {/* Right Spacer for centering */}
+              <div className="w-[60px]"></div>
             </div>
 
             {/* Inner Content */}
