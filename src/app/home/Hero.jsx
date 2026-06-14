@@ -93,7 +93,7 @@ function HeroContent() {
         </div>
       </div>
 
-      <main className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-4 pb-24 pt-16 sm:px-6 sm:pb-24 sm:pt-16 lg:pb-20 lg:pt-14">
+      <main className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-4 pb-32 pt-16 sm:px-6 sm:pb-28 sm:pt-16 lg:pb-20 lg:pt-14">
         <div className="relative w-full max-w-[980px]">
 
 
@@ -111,7 +111,7 @@ function HeroContent() {
                 }}
                 exit={{ opacity: 0, scale: 0.78, y: 48, filter: 'blur(10px)' }}
                 transition={{ type: 'spring', stiffness: 230, damping: 24, mass: 0.9 }}
-                className={`relative z-10 flex h-[clamp(500px,calc(100svh-148px),620px)] w-full flex-col overflow-hidden rounded-[18px] border shadow-[0_28px_90px_rgba(31,66,95,0.24)] backdrop-blur-2xl transition-colors duration-500 ${
+                className={`relative z-10 flex w-full flex-col overflow-hidden rounded-[18px] border shadow-[0_28px_90px_rgba(31,66,95,0.24)] backdrop-blur-2xl transition-colors duration-500 ${
                   isDark ? 'border-white/15 bg-[#172637]/82' : 'border-white/70 bg-white/78'
                 }`}
               >
@@ -129,32 +129,48 @@ function HeroContent() {
                   onClose={closeHome}
                 />
 
-                <div className="grid min-h-0 flex-1 items-center gap-6 px-5 py-6 sm:px-8 md:grid-cols-[1.04fr_0.96fr] md:px-10 md:py-7 lg:px-12">
+                {/* Mobile layout: stacked column; md+: two-column grid */}
+                <div className="flex flex-col md:grid md:grid-cols-[1.04fr_0.96fr] md:items-center gap-5 px-5 py-5 sm:px-8 sm:py-6 md:px-10 md:py-7 lg:px-12">
+                  {/* Avatar — shown first on mobile, hidden on md (shown right column instead) */}
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.08, duration: 0.4 }}
+                    className="flex md:hidden justify-center"
+                  >
+                    <div
+                      className="relative flex w-28 h-28 items-center justify-center rounded-full overflow-hidden border-[5px] shadow-[0_12px_28px_rgba(35,70,95,0.15)]"
+                      style={{ borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'white' }}
+                    >
+                      <img src="/hero.jpg" alt="Urvisha Hero" className="w-full h-full object-cover" />
+                    </div>
+                  </motion.div>
+
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.08, duration: 0.45 }}
+                    transition={{ delay: 0.1, duration: 0.45 }}
                     className="text-center md:text-left"
                   >
-                    <div className={`mb-4 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[12px] font-semibold tracking-wide ${
+                    <div className={`mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[11px] font-semibold tracking-wide ${
                       isDark ? 'border-white/15 bg-white/5 text-[#a2e1e9]' : 'border-[#cfe9fb] bg-[#eef9ff] text-[#3c748a]'
                     }`}>
                       <span className="h-2 w-2 rounded-full bg-[#7ad68d] shadow-[0_0_14px_rgba(122,214,141,0.8)]" />
                       available for projects
                     </div>
 
-                    <h1 className={`text-[40px] font-semibold leading-[1.02] tracking-normal sm:text-[52px] lg:text-[60px] ${
+                    <h1 className={`text-[34px] font-semibold leading-[1.02] tracking-normal sm:text-[48px] lg:text-[60px] ${
                       isDark ? 'text-[#dffbff]' : 'text-[#ff9800]'
                     }`}>
                       i&apos;m urvisha
                     </h1>
-                    <p className={`mt-3 max-w-[540px] text-[15px] leading-7 sm:text-[17px] ${
+                    <p className={`mt-2 max-w-[540px] mx-auto md:mx-0 text-[13.5px] leading-6 sm:text-[16px] sm:leading-7 ${
                       isDark ? 'text-white/82' : 'text-[#5f707b]'
                     }`}>
                       Full stack developer crafting clean web apps, dashboards, ERP/CRM systems, and polished interfaces with a playful desktop spirit.
                     </p>
 
-                    <div className="mt-7 grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
+                    <div className="mt-5 grid grid-cols-5 gap-2 sm:gap-4">
                       {navItems.map((item) => (
                         <IconItem
                           key={item.id}
@@ -167,11 +183,12 @@ function HeroContent() {
                     </div>
                   </motion.div>
 
+                  {/* Avatar — hidden on mobile (shown above), visible on md+ */}
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.14, duration: 0.45 }}
-                    className="relative mx-auto flex w-56 h-56 sm:w-72 sm:h-72 items-center justify-center rounded-full overflow-hidden border-[6px] shadow-[0_18px_40px_rgba(35,70,95,0.15)] transition-transform hover:scale-[1.03] duration-300"
+                    className="relative mx-auto hidden md:flex w-56 h-56 sm:w-72 sm:h-72 items-center justify-center rounded-full overflow-hidden border-[6px] shadow-[0_18px_40px_rgba(35,70,95,0.15)] transition-transform hover:scale-[1.03] duration-300"
                     style={{ borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'white' }}
                     onMouseEnter={() => playSound('hover_face')}
                   >
@@ -250,7 +267,7 @@ function HeroContent() {
       {activeCard === 'faq' && <FaqCard isDark={isDark} onClose={() => setActiveCard(null)} openFaq={openFaq} toggleFaq={(index) => setOpenFaq(openFaq === index ? null : index)} />}
       {activeCard === 'contact' && <ContactCard isDark={isDark} onClose={() => setActiveCard(null)} />}
 
-      <footer className={`absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-4 rounded-full border p-2 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 ${
+      <footer className={`absolute bottom-4 sm:bottom-8 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 sm:gap-4 rounded-full border p-1.5 sm:p-2 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 ${
         isDark ? 'border-[#0A66C2]/20 bg-[#172637]/90' : 'border-[#0A66C2]/20 bg-white/90'
       }`}>
         <a
@@ -258,18 +275,18 @@ function HeroContent() {
           target="_blank"
           rel="noopener noreferrer"
           onMouseEnter={() => playSound('hover_footer')}
-          className="group flex items-center gap-2.5 rounded-full px-6 py-3 text-[14px] font-bold tracking-wide transition-all duration-300 shadow-sm hover:shadow-md bg-[#0A66C2] text-white hover:bg-[#004182] hover:shadow-[#0A66C2]/30"
+          className="group flex items-center gap-2 sm:gap-2.5 rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-[13px] sm:text-[14px] font-bold tracking-wide transition-all duration-300 shadow-sm hover:shadow-md bg-[#0A66C2] text-white hover:bg-[#004182] hover:shadow-[#0A66C2]/30"
         >
-          <LinkedInIcon width="20" height="20" fill="currentColor" />
+          <LinkedInIcon width="18" height="18" fill="currentColor" />
           Connect
         </a>
         <span className={`hidden px-4 font-mono text-[13px] font-bold tracking-wider sm:block ${isDark ? 'text-white/60' : 'text-[#718096]'}`}>
-          © 2026 {personalInfo.name} | {personalInfo.location} 
+          © 2026 {personalInfo.footerName} | {personalInfo.location} 
         </span>
       </footer>
 
       <div
-        className="absolute bottom-0 right-4 sm:right-8 z-20 w-16 sm:w-20 cursor-pointer hover:scale-105 transition-transform"
+        className="absolute bottom-0 right-3 sm:right-8 z-20 w-14 sm:w-20 cursor-pointer hover:scale-105 transition-transform"
         onMouseEnter={() => playSound('hover_star')}
         onClick={() => { playSound('iconClick'); setShowResume(true); }}
       >
@@ -352,18 +369,18 @@ function IconItem({ item, isDark, onClick, onHover }) {
       type="button"
       onClick={onClick}
       onMouseEnter={onHover}
-      className={`desktop-icon group flex min-h-[88px] flex-col items-center justify-center gap-1.5 rounded-[16px] border px-2.5 py-2.5 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.05] ${
+      className={`desktop-icon group flex flex-col items-center justify-center gap-1 sm:gap-1.5 rounded-[14px] sm:rounded-[16px] border px-1.5 py-2 sm:px-2.5 sm:py-2.5 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.05] ${
         isDark
           ? 'border-white/10 bg-gradient-to-br from-white/[0.09] to-white/[0.025] hover:border-[#a2e1e9]/45 hover:shadow-[0_0_28px_rgba(162,225,233,0.14)]'
           : 'border-[#d9edf8] bg-gradient-to-br from-white to-[#eef9ff]/70 hover:border-[#a8d3fc] hover:shadow-[0_0_28px_rgba(168,211,252,0.45)]'
       }`}
     >
-      <span className={`app-icon-frame grid h-[52px] w-[52px] place-items-center rounded-[14px] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_8px_18px_rgba(35,70,95,0.12)] ${
+      <span className={`app-icon-frame grid h-[40px] w-[40px] sm:h-[52px] sm:w-[52px] place-items-center rounded-[11px] sm:rounded-[14px] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_8px_18px_rgba(35,70,95,0.12)] ${
         isDark ? 'bg-[#20364a]' : 'bg-white'
-      } [&>svg]:h-[42px] [&>svg]:w-[42px]`}>
+      } [&>svg]:h-[32px] [&>svg]:w-[32px] sm:[&>svg]:h-[42px] sm:[&>svg]:w-[42px]`}>
         <Icon isDark={isDark} />
       </span>
-      <span className={`font-mono text-[13px] font-bold lowercase tracking-wide ${isDark ? 'text-white' : 'text-[#34404a]'}`}>
+      <span className={`font-mono text-[10px] sm:text-[13px] font-bold lowercase tracking-wide ${isDark ? 'text-white' : 'text-[#34404a]'}`}>
         {item.label}
       </span>
     </button>
