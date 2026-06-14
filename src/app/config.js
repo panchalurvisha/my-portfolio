@@ -7,6 +7,7 @@ export const personalInfo = {
   resume: "/Urvisha_Panchal_Full_Stack_Resume.pdf",
   dob: "2004-07-14", // YYYY-MM-DD format. Change this to your actual birth date!
   role: "Full Stack Developer",
+  footerName : "urvishapanchal.site"
 };
 
 export const techStack = [
