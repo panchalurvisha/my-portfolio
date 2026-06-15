@@ -7,16 +7,12 @@ export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
 
-  const [isMobile, setIsMobile] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    // Check if it's a touch device or mobile screen
-    const checkMobile = () => {
-      setIsMobile(window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    if (typeof window !== "undefined") {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    }
 
     const updateMousePosition = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -42,19 +38,18 @@ export default function CustomCursor() {
     // Default cursor is kept VISIBLE so all your window drags and clicks work perfectly.
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
       window.removeEventListener("mousemove", updateMousePosition);
       window.removeEventListener("mouseover", handleMouseOver);
     };
   }, []);
 
-  if (isMobile || mousePosition.x === -100) return null;
+  if (isTouchDevice || mousePosition.x === -100) return null;
 
   return (
     <>
       {/* Main solid blue dot */}
       <motion.div
-        className="fixed top-0 left-0 w-3 h-3 bg-[#0ea5e9] rounded-full pointer-events-none z-[9999]"
+        className="hidden md:block fixed top-0 left-0 w-3 h-3 bg-[#0ea5e9] rounded-full pointer-events-none z-[9999]"
         style={{
           transform: "translate(-50%, -50%)"
         }}
@@ -72,7 +67,7 @@ export default function CustomCursor() {
       
       {/* Outer hollow blue circle (delayed/spring) */}
       <motion.div
-        className="fixed top-0 left-0 w-10 h-10 border-2 border-[#0ea5e9] rounded-full pointer-events-none z-[9998]"
+        className="hidden md:block fixed top-0 left-0 w-10 h-10 border-2 border-[#0ea5e9] rounded-full pointer-events-none z-[9998]"
         style={{
           transform: "translate(-50%, -50%)"
         }}
