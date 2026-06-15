@@ -4,6 +4,7 @@ import DesktopWindow from './DesktopWindow';
 import Link from 'next/link';
 import { personalInfo, techStack } from '../config';
 import { projectsData } from '../data/projects';
+import { companiesData } from '../data/companies';
 import { GithubIcon, LinkedInIcon } from './Icons';
 import { useSound } from './useSound';
 
@@ -134,20 +135,9 @@ export default function WorkCard({ isDark, onClose }) {
           <div className="marquee-companies-container flex overflow-hidden marquee-companies-mask w-full py-2">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="animate-marquee-companies gap-12 pr-12 items-center" aria-hidden={i === 1}>
-                {[
-                  { name: "Singhai Ji Store", logo: "🏢" },
-                  { name: "GVoice", logo: "📞" },
-                  { name: "Catalyst", logo: "📈" },
-                  { name: "NatureEnergy", logo: "🌱" },
-                  { name: "Novotion", logo: "⚙️" },
-                  { name: "TechCorp", logo: "💻" },
-                  { name: "GlobalRetail", logo: "🛍️" },
-                ].map((company, j) => (
-                  <div key={j} className="flex items-center gap-3 group cursor-pointer whitespace-nowrap">
-                    <span className="text-3xl grayscale group-hover:grayscale-0 transition-all duration-300 transform group-hover:scale-110">{company.logo}</span>
-                    <span className={`text-[18px] font-bold tracking-tight transition-colors duration-300 ${isDark ? 'text-gray-500 group-hover:text-white' : 'text-gray-400 group-hover:text-black'}`}>
-                      {company.name}
-                    </span>
+                {companiesData.map((company, j) => (
+                  <div key={j} className="flex items-center justify-center group cursor-pointer h-12">
+                    <img src={company.logo} alt={`Company ${j}`} className="h-full w-auto object-contain transition-all duration-300 transform group-hover:scale-110" />
                   </div>
                 ))}
               </div>
@@ -160,17 +150,7 @@ export default function WorkCard({ isDark, onClose }) {
           <div className="flex-[1]">
             <h3 className={`text-[13px] font-bold tracking-wider uppercase mb-5 ${isDark ? 'text-[#a2e1e9]' : 'text-[#3c748a]'}`}>Technologies I Use</h3>
             <div className="flex flex-wrap gap-4">
-                {[
-                  { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
-                  { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
-                  { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original-wordmark.svg" },
-                  { name: "Express", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg" },
-                  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
-                  { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" },
-                  { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" },
-                  { name: "Tailwind", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
-                  { name: "Framer", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/framermotion/framermotion-original.svg" }
-                ].map((tech, i) => (
+                {techStack.map((tech, i) => (
                   <div key={i} className="group relative flex flex-col items-center gap-2 z-0 hover:z-50">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center p-2.5 border shadow-sm transition-transform group-hover:scale-110 ${
                       isDark ? 'bg-white/90 border-white/10' : 'bg-white border-[#eef2f6]'
@@ -215,7 +195,7 @@ export default function WorkCard({ isDark, onClose }) {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-            {projectsData.slice(0, 4).map((project) => (
+            {projectsData.filter(p => p.featured).slice(0, 4).map((project) => (
               <ProjectCard 
                 key={project.id}
                 onHover={() => playSound('hover_icon')}
@@ -225,6 +205,7 @@ export default function WorkCard({ isDark, onClose }) {
                 isDark={isDark}
                 bgLight={project.bgLight}
                 bgDark={project.bgDark}
+                link={`/projects/${project.id}`}
               />
             ))}
           </div>

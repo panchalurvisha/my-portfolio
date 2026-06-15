@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { projectsData } from '../data/projects';
-import { personalInfo, techStack } from '../config';
-import { ProjectCard } from '../home/WorkCard';
+import { notFound } from 'next/navigation';
+import { projectsData } from '../../data/projects';
+import { personalInfo, techStack } from '../../config';
 
 // Simple Theme Switcher for the standalone page
 function ThemeToggle({ isDark, onToggle }) {
@@ -39,16 +39,27 @@ function ThemeToggle({ isDark, onToggle }) {
   );
 }
 
-export default function ProjectsPage() {
+export default function ProjectDetail({ params }) {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Unwrap params conditionally for Next.js 15+ compatibility or standard usage
+  const resolvedParams = typeof params.then === 'function' ? use(params) : params;
+  const projectId = resolvedParams?.id;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) return null;
+
+  const project = projectsData.find((p) => p.id === projectId);
+
+  if (!project) {
+    notFound();
+    return null;
+  }
 
   const getTechIcon = (name) => {
     const tech = techStack.find(t => t.name === name);
@@ -69,71 +80,129 @@ export default function ProjectsPage() {
         isDark ? 'border-white/10 bg-[#0f1720]/80' : 'border-black/5 bg-white/80'
       }`}>
         <Link 
-          href="/" 
+          href="/projects" 
           className={`flex items-center gap-2 font-bold px-4 py-2 rounded-full transition-colors ${
             isDark ? 'hover:bg-white/10 text-[#a2e1e9]' : 'hover:bg-black/5 text-[#3c748a]'
           }`}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-          Back to Home
+          All Projects
         </Link>
-
         <ThemeToggle isDark={isDark} onToggle={() => setIsDark(!isDark)} />
       </nav>
 
-      {/* Main Content */}
       <main className="max-w-5xl mx-auto px-6 pt-32 pb-24">
         
-        {/* Header */}
+        {/* Project Header using Project's Two-Color Theme */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-16 text-center md:text-left"
+          className={`mb-16 p-8 md:p-12 rounded-3xl border shadow-lg transition-colors duration-500 ${isDark ? project.bgDark + ' border-white/5' : project.bgLight + ' border-black/5'}`}
         >
-          <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-[13px] font-bold tracking-wider uppercase mb-6 shadow-sm ${
-            isDark ? 'border-[#a2e1e9]/20 bg-[#a2e1e9]/10 text-[#a2e1e9]' : 'border-[#3c748a]/20 bg-[#3c748a]/5 text-[#3c748a]'
-          }`}>
-            Portfolio
-          </div>
-          <h1 className={`text-4xl md:text-6xl font-extrabold tracking-tight mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            My Projects
+          <h1 className={`text-4xl md:text-5xl font-extrabold tracking-tight mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            {project.title}
           </h1>
-          <p className={`text-lg max-w-2xl leading-relaxed ${isDark ? 'text-gray-400' : 'text-[#647582]'}`}>
-            A detailed look at some of the systems, platforms, and interfaces I've built. I focus on creating scalable, user-friendly solutions that solve real business problems.
+          <p className={`text-lg md:text-xl max-w-3xl leading-relaxed ${isDark ? 'text-gray-300' : 'text-[#444]'}`}>
+            {project.detailedDesc}
           </p>
+
+          <div className="flex flex-wrap gap-4 mt-8">
+            {project.live && project.live !== "#" && (
+              <a href={project.live} target="_blank" rel="noopener noreferrer" className={`px-6 py-3 rounded-full font-bold transition-transform hover:-translate-y-1 ${isDark ? 'bg-[#a2e1e9] text-black' : 'bg-[#3c748a] text-white'}`}>
+                View Live Project
+              </a>
+            )}
+            {project.github && project.github !== "#" && (
+              <a href={project.github} target="_blank" rel="noopener noreferrer" className={`px-6 py-3 rounded-full font-bold border transition-transform hover:-translate-y-1 ${isDark ? 'border-white/20 hover:bg-white/10 text-white' : 'border-black/20 hover:bg-black/5 text-black'}`}>
+                GitHub Repository
+              </a>
+            )}
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projectsData.map((project, index) => (
-            <motion.div 
-              key={project.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <ProjectCard 
-                title={project.title}
-                desc1={project.detailedDesc}
-                tech={project.tech.join(', ')}
-                isDark={isDark}
-                bgLight={project.bgLight}
-                bgDark={project.bgDark}
-                link={`/projects/${project.id}`}
-              />
-            </motion.div>
-          ))}
-        </div>
+        {/* What I Solved */}
+        {project.problemSolved && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <h2 className={`text-2xl font-bold mb-4 flex items-center gap-2 ${isDark ? 'text-[#a2e1e9]' : 'text-[#ff9800]'}`}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              What I Solved
+            </h2>
+            <div className={`p-6 md:p-8 rounded-2xl border ${isDark ? 'bg-[#172637]/50 border-white/5' : 'bg-white border-[#eef2f6]'}`}>
+              <p className={`text-[16px] md:text-lg leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                {project.problemSolved}
+              </p>
+            </div>
+          </motion.div>
+        )}
 
-        {/* Footer CTA */}
+        {/* Tech Stack */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16"
+        >
+          <h2 className={`text-[13px] font-bold tracking-wider uppercase mb-5 ${isDark ? 'text-[#a2e1e9]' : 'text-[#3c748a]'}`}>
+            Tech Stack Used
+          </h2>
+          <div className="flex flex-wrap gap-4">
+            {project.tech.map((techName, i) => {
+              const iconUrl = getTechIcon(techName);
+              return (
+                <div key={i} className="group relative flex flex-col items-center gap-2">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-3 border shadow-sm transition-transform group-hover:scale-110 ${
+                    isDark ? 'bg-white/90 border-white/10' : 'bg-white border-[#eef2f6]'
+                  }`}>
+                    {iconUrl ? (
+                      <img src={iconUrl} alt={techName} className="w-full h-full object-contain" />
+                    ) : (
+                      <span className="font-bold text-[10px] text-center text-black leading-tight break-all">{techName}</span>
+                    )}
+                  </div>
+                  <span className={`text-[13px] font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {techName}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Image Gallery */}
+        {project.images && project.images.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <h2 className={`text-[13px] font-bold tracking-wider uppercase mb-5 ${isDark ? 'text-[#a2e1e9]' : 'text-[#3c748a]'}`}>
+              Gallery
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {project.images.map((imgSrc, idx) => (
+                <div key={idx} className={`overflow-hidden rounded-2xl border shadow-sm ${idx === 0 && project.images.length % 2 !== 0 ? 'md:col-span-2' : ''} ${isDark ? 'border-white/10' : 'border-black/5'}`}>
+                  <img src={imgSrc} alt={`${project.title} screenshot ${idx + 1}`} className="w-full h-auto object-cover transition-transform duration-500 hover:scale-105" />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Common CTA */}
         <div className={`mt-24 p-8 md:p-12 text-center rounded-3xl border shadow-lg ${
           isDark ? 'bg-gradient-to-br from-[#172637] to-[#121d2b] border-[#a2e1e9]/20' : 'bg-gradient-to-br from-[#f0f7ff] to-white border-[#3c748a]/20'
         }`}>
           <h2 className={`text-3xl md:text-4xl font-extrabold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Want the next project to be yours?
+            Like what you see?
           </h2>
           <p className={`text-lg mb-10 max-w-lg mx-auto ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            I'm currently available for freelance projects and open to full-time opportunities. Let's build something amazing together.
+            I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
           </p>
           
           <div className="flex justify-center mt-6">
@@ -143,7 +212,7 @@ export default function ProjectsPage() {
               {/* Default State */}
               <div className="flex items-center justify-center gap-2.5 font-bold transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:w-0 group-hover:opacity-0 overflow-hidden whitespace-nowrap w-[190px] opacity-100">
                 <svg className="flex-shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>connect with me </span>
+                <span>Let's talk</span>
               </div>
 
               {/* Expanded State */}
