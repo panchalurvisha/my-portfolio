@@ -68,12 +68,19 @@ export default function FaqCard({ isDark, onClose, openFaq, toggleFaq }) {
             isOpen={openFaq === 0} 
             onClick={() => toggleFaq(0)} 
             isDark={isDark}
-            content={<p>I specialize in the modern JavaScript ecosystem, primarily <strong>Next.js</strong> and <strong>React.js</strong> for the frontend, and <strong>Node.js</strong> for the backend. For databases, I rely heavily on <strong>PostgreSQL</strong>. I also use <strong>Tailwind CSS</strong> and <strong>Framer Motion</strong> to build beautiful, responsive interfaces.</p>}
+            content={<p>I specialize in the modern JavaScript ecosystem, primarily <strong>React.js</strong>, <strong>Next.js</strong>, and <strong>Node.js</strong> (with Express). I also have extensive experience with <strong>PHP</strong>. For databases, I rely on <strong>PostgreSQL</strong> and <strong>MySQL</strong>. On the frontend, I heavily use <strong>Tailwind CSS</strong>, <strong>Framer Motion</strong>, and <strong>jQuery</strong> to build dynamic, responsive interfaces.</p>}
+          />
+          <AccordionItem 
+            title="What kind of projects do you build?" 
+            isOpen={openFaq === 1} 
+            onClick={() => toggleFaq(1)} 
+            isDark={isDark}
+            content={<p>I specialize in building comprehensive business management solutions. This includes custom <strong>ERPs</strong>, <strong>CRMs</strong>, <strong>HRMS</strong> applications, <strong>POS software</strong>, and customized logistics or inventory dashboards. I also build high-performing, scalable corporate and e-commerce websites tailored to specific business needs.</p>}
           />
           <AccordionItem 
             title="Are you available for freelance work?" 
-            isOpen={openFaq === 1} 
-            onClick={() => toggleFaq(1)} 
+            isOpen={openFaq === 2} 
+            onClick={() => toggleFaq(2)} 
             isDark={isDark}
             content={
               <p>Yes! I am currently accepting freelance projects and exploring full-time opportunities. If you have an exciting project in mind, feel free to reach out via my <a href={`mailto:${personalInfo.email}`} className={`underline font-bold transition-colors duration-300 ${isDark ? 'text-[#d6a2e9] hover:text-white' : 'text-[#9d4edd] hover:text-black'}`}>email</a> or LinkedIn.</p>
@@ -81,15 +88,15 @@ export default function FaqCard({ isDark, onClose, openFaq, toggleFaq }) {
           />
           <AccordionItem 
             title="What is your development process?" 
-            isOpen={openFaq === 2} 
-            onClick={() => toggleFaq(2)} 
+            isOpen={openFaq === 3} 
+            onClick={() => toggleFaq(3)} 
             isDark={isDark}
             content={<p>I believe in strong communication. I typically start with a thorough requirement analysis to understand the core problem. Then, I move to architecture planning and wireframing, followed by agile development where I provide regular updates and incorporate feedback iteratively.</p>}
           />
           <AccordionItem 
             title="Do you handle UI/UX design as well?" 
-            isOpen={openFaq === 3} 
-            onClick={() => toggleFaq(3)} 
+            isOpen={openFaq === 4} 
+            onClick={() => toggleFaq(4)} 
             isDark={isDark}
             content={<p>While my primary expertise is in Full Stack Development, I have a very strong eye for design. I regularly translate Figma prototypes into pixel-perfect code, and for many projects, I design the UI myself using modern design principles and aesthetics.</p>}
           />
