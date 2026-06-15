@@ -14,7 +14,7 @@ const techIcons = techStack.reduce((acc, curr) => {
 }, {});
 
 
-export function ProjectCard({ title, desc1, tech, isDark, link = "#", onHover, bgLight, bgDark }) {
+export function ProjectCard({ title, desc1, tech, isDark, link = "#", onHover, bgLight, bgDark, image }) {
   return (
     <a href={link} onMouseEnter={onHover} className={`block rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl overflow-hidden flex flex-col relative group border ${isDark ? `${bgDark} border-white/5` : `${bgLight} border-transparent`}`}>
       <div className="p-8 pb-2 flex-1 flex flex-col z-10">
@@ -54,17 +54,23 @@ export function ProjectCard({ title, desc1, tech, isDark, link = "#", onHover, b
             <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
           </div>
           {/* Mockup Body */}
-          <div className="flex-1 p-4 flex flex-col gap-3">
-            <div className={`w-3/4 h-3 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
-            <div className={`w-1/2 h-3 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
-            <div className="flex gap-3 mt-2">
-              <div className={`w-12 h-12 rounded-lg ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
-              <div className="flex-1 flex flex-col gap-2 justify-center">
-                <div className={`w-full h-2 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
-                <div className={`w-4/5 h-2 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
+          {image ? (
+            <div className="flex-1 w-full overflow-hidden">
+              <img src={image} alt={title} className="w-full h-full object-cover object-top" />
+            </div>
+          ) : (
+            <div className="flex-1 p-4 flex flex-col gap-3">
+              <div className={`w-3/4 h-3 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
+              <div className={`w-1/2 h-3 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
+              <div className="flex gap-3 mt-2">
+                <div className={`w-12 h-12 rounded-lg ${isDark ? 'bg-white/5' : 'bg-black/5'}`}></div>
+                <div className="flex-1 flex flex-col gap-2 justify-center">
+                  <div className={`w-full h-2 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
+                  <div className={`w-4/5 h-2 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}></div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </a>
@@ -206,6 +212,7 @@ export default function WorkCard({ isDark, onClose }) {
                 bgLight={project.bgLight}
                 bgDark={project.bgDark}
                 link={`/projects/${project.id}`}
+                image={project.images?.[0]}
               />
             ))}
           </div>

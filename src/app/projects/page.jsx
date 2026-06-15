@@ -120,6 +120,7 @@ export default function ProjectsPage() {
                 bgLight={project.bgLight}
                 bgDark={project.bgDark}
                 link={`/projects/${project.id}`}
+                image={project.images?.[0]}
               />
             </motion.div>
           ))}
