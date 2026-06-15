@@ -216,11 +216,9 @@ export default function AboutCard({ isDark, onClose }) {
                   <div key={i} className="animate-marquee gap-4 pr-4" aria-hidden={i === 1}>
                     {[
                       { text: "Exploring new tech", img: "https://picsum.photos/seed/tech/150/150" },
-                      { text: "Side projects", img: "https://picsum.photos/seed/code/150/150" },
                       { text: "Backend architecture", img: "https://picsum.photos/seed/server/150/150" },
                       { text: "UI/UX design", img: "https://picsum.photos/seed/design/150/150" },
-                      { text: "Problem solving", img: "https://picsum.photos/seed/puzzle/150/150" },
-                      { text: "Travelling", img: "https://picsum.photos/seed/travel/150/150" }
+                      { text: "Problem solving", img: "https://picsum.photos/seed/puzzle/150/150" }
                     ].map((interest, j) => (
                       <div key={j} className="flex flex-col items-center gap-2 group cursor-pointer w-24">
                         <div className={`w-20 h-20 rounded-2xl overflow-hidden border shadow-sm transition-transform group-hover:scale-105 ${isDark ? 'border-white/10' : 'border-black/5'}`}>
